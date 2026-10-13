@@ -63,8 +63,7 @@ input::placeholder{color:#55648f}
 .seg button[aria-pressed="true"]{background:var(--panel);color:#fff;box-shadow:inset 0 0 0 2px var(--line)}
 .pick-h{font-family:var(--display);font-size:1.3rem;letter-spacing:.03em;text-align:center}
 .pick-h .p1{color:var(--p1)}.pick-h .p2{color:var(--p2)}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%}
-@media (max-width:760px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
 @media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .card{background:var(--panel);border:3px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;color:var(--fg);font-family:var(--body);transition:transform .1s,border-color .1s;min-width:0;position:relative}
 .card:hover{transform:translateY(-2px)}
@@ -274,16 +273,22 @@ const BALLS={
   hive:{name:'Hive Ball',light:'#fff1a6',color:'#ffc21a',dark:'#c98500',touch:6,price:0,ability:'Releases bees that chase the enemy and sting.',stat:'Hit 6 · Sting 3'},
   storm:{name:'Storm Ball',light:'#efe3ff',color:'#9b6bff',dark:'#4b23b0',touch:7,price:0,ability:'Calls lightning down on the enemy every few seconds.',stat:'Hit 7 · Zap 6'},
   ghost:{name:'Ghost Ball',light:'#ffffff',color:'#d6def5',dark:'#7f8bb3',touch:13,price:150,ability:'Heals from every hit it lands. Phases out to dodge.',stat:'Hit 13 · Heal 8'},
-  bomb:{name:'Bomb Ball',light:'#8a8fa8',color:'#3b3e52',dark:'#15161f',touch:6,price:150,ability:'Throws bombs at the enemy that explode after a short fuse.',stat:'Hit 6 · Blast 12'},
+  bomb:{name:'Bomb Ball',light:'#8a8fa8',color:'#3b3e52',dark:'#15161f',touch:6,price:150,ability:'Throws bombs at the enemy that explode after a short fuse.',stat:'Hit 6 · Blast 11'},
   cactus:{name:'Cactus Ball',light:'#c8f59a',color:'#4fbf3f',dark:'#1f6b1c',touch:8,price:200,ability:'Sprays needles everywhere. Hurts anything that hits it.',stat:'Hit 8 · Needle 4'},
   slime:{name:'Slime Ball',light:'#c9fff4',color:'#2fd6be',dark:'#0d7f72',touch:8,price:200,ability:'Splits off mini slimes when hit, and every few seconds.',stat:'Hit 8 · Mini 4'},
   magnet:{name:'Magnet Ball',light:'#ffb3bd',color:'#e8384f',dark:'#8a1426',touch:11,price:250,ability:'Pulls the enemy toward it, then slams into it.',stat:'Hit 11 · Pull'},
   shield:{name:'Shield Ball',light:'#d6e4ff',color:'#5b8def',dark:'#23439c',touch:8,price:250,ability:'Grows a shield that blocks a hit and bounces damage back.',stat:'Hit 8 · Reflect 8'},
   laser:{name:'Laser Ball',light:'#ffd1f6',color:'#ff2fd0',dark:'#8a0f70',touch:7,price:300,ability:'Locks on, then fires a laser across the whole arena.',stat:'Hit 7 · Laser 14'},
   rocket:{name:'Rocket Ball',light:'#ffffff',color:'#e9edf5',dark:'#9aa3b8',touch:7,price:300,ability:'Blasts toward the enemy at high speed for a big hit.',stat:'Hit 7 · Ram 20'},
+  hole:{name:'Black Hole Ball',light:'#c99bff',color:'#3a1670',dark:'#0b0418',touch:7,price:450,ability:'Opens black holes in the enemy\'s path that suck it in and crush it.',stat:'Hit 7 · Crush 4'},
+  mirror:{name:'Mirror Ball',light:'#ffffff',color:'#c9d3e6',dark:'#5d6a86',touch:7,price:350,ability:'Makes copies of itself that bounce around and ram the enemy.',stat:'Hit 7 · Copy 7'},
+  boomer:{name:'Boomerang Ball',light:'#f3c98b',color:'#b8742c',dark:'#5c3511',touch:7,price:300,ability:'Throws boomerangs that can hit on the way out and on the way back.',stat:'Hit 7 · Boomerang 9'},
+  clock:{name:'Rewind Ball',light:'#fff3c2',color:'#e8b93a',dark:'#8a5a00',touch:12,price:400,ability:'Turns back time: jumps to where it was and gets its lost HP back.',stat:'Hit 12 · Rewind 2.5s'},
+  puffer:{name:'Puffer Ball',light:'#ffe0ec',color:'#ff8fb8',dark:'#b23c6a',touch:7,price:350,ability:'Puffs up huge and spiky when hit, taking half damage.',stat:'Hit 7 · Puffed 15'},
+  warp:{name:'Warp Ball',light:'#e6feff',color:'#22c7ff',dark:'#0a2a7a',touch:7,price:400,ability:'Teleports right in front of the enemy for a surprise hit.',stat:'Hit 7 · Ambush 15'},
 };
 const KEYS=Object.keys(BALLS);
-const CD={blaze:.09,frost:2.6,hive:2.4,storm:2.7,ghost:4.8,bomb:2.5,cactus:2.8,slime:2.6,magnet:3.2,shield:3,laser:3,rocket:2.6};
+const CD={blaze:.09,frost:2.6,hive:2.4,storm:2.7,ghost:4.8,bomb:2.5,cactus:2.8,slime:2.6,magnet:3.2,shield:3,laser:3,rocket:2.6,hole:4.6,mirror:2.8,boomer:1.9,clock:5.5,puffer:99,warp:3.3};
 const BOTS=['Bot Rex','Bot Juno','Bot Pickle','Bot Turbo','Bot Nova','Bot Waffles','Bot Biscuit','Bot Zippy'];
 const DIFF={easy:{hp:80,aim:1.2,mult:.6,label:'Easy'},normal:{hp:100,aim:.6,mult:1,label:'Normal'},hard:{hp:125,aim:.15,mult:1.6,label:'Hard'}};
 const BOMB_R=92, FIRE_LIFE=2.8;
@@ -317,7 +322,9 @@ const SFX={
   boost(){ tone(200,.3,'sawtooth',.05,3); }, pop(){ tone(900,.05,'square',.03,.4); }, sting(){ tone(800,.04,'square',.03,.6); },
   boom(){ boom(.45,.3); }, big(){ boom(.6,.35); }, fight(){ tone(330,.12,'square',.07,2.5); }, lock(){ tone(440,.08,'triangle',.07,2); },
   ready(){ tone(380,.06,'triangle',.04,1.5); }, win(){ tone(523,.1,'triangle',.07); setTimeout(()=>tone(784,.18,'triangle',.07),110); },
-  click(){ tone(520,.06,'triangle',.06,1.5); }, nope(){ tone(150,.15,'square',.05); }, slime(){ tone(220,.1,'sine',.05,1.8); },
+  click(){ tone(520,.06,'triangle',.06,1.5); },
+  hole(){ tone(90,.7,'sine',.08,.4); }, mirror(){ tone(1400,.12,'triangle',.04,1.6); }, throw(){ tone(500,.18,'triangle',.04,.6); },
+  rewind(){ tone(900,.35,'sine',.06,.3); }, puff(){ tone(180,.2,'square',.05,2.5); }, warp(){ tone(1600,.2,'sine',.06,.2); }, nope(){ tone(150,.15,'square',.05); }, slime(){ tone(220,.1,'sine',.05,1.8); },
 };
 const QUIET_SFX={wall:1};
 
@@ -374,6 +381,29 @@ function drawBall(c,type,x,y,r,o={}){
       c.beginPath(); c.arc(r*1.05,0,r*.55,0,TAU); c.fill();
       c.fillStyle='#4aa8ff'; c.strokeStyle='#fff'; c.lineWidth=r*.06; c.beginPath(); c.arc(r*.18,-r*.38,r*.17,0,TAU); c.fill(); c.stroke();
       c.restore(); break;
+    case 'hole':
+      c.save(); c.rotate(t*3); c.lineCap='round';
+      for(let i=0;i<3;i++){ c.rotate(TAU/3); c.strokeStyle=i%2?'rgba(255,120,220,.75)':'rgba(170,120,255,.8)'; c.lineWidth=r*.1; c.beginPath(); c.arc(0,0,r*(.35+i*.17),0,Math.PI*.9); c.stroke(); }
+      c.restore(); c.fillStyle='#000'; c.beginPath(); c.arc(0,0,r*.26,0,TAU); c.fill(); break;
+    case 'mirror': {
+      const n=7, sz=2*r/n;
+      for(let i=0;i<n;i++) for(let j=0;j<n;j++){ const v=Math.sin(i*1.7+j*2.3+t*4); c.fillStyle=`rgba(255,255,255,${.12+.3*Math.max(0,v)})`; c.fillRect(-r+i*sz+1,-r+j*sz+1,sz-2,sz-2); }
+      c.fillStyle='rgba(140,220,255,.35)'; c.fillRect(-r+((Math.floor(t*3))%n)*sz,-r,sz,2*r); break; }
+    case 'boomer':
+      c.save(); c.rotate(rot*1.5); c.strokeStyle='#4a2a0c'; c.lineWidth=r*.2; c.lineCap='round'; c.lineJoin='round';
+      c.beginPath(); c.moveTo(-r*.55,-r*.35); c.lineTo(0,r*.3); c.lineTo(r*.55,-r*.35); c.stroke(); c.restore(); break;
+    case 'clock':
+      c.fillStyle='rgba(255,255,255,.85)'; c.beginPath(); c.arc(0,0,r*.6,0,TAU); c.fill();
+      c.strokeStyle='#5a3a00'; c.lineCap='round';
+      for(let i=0;i<12;i++){ const a=i/12*TAU; c.lineWidth=r*.04; c.beginPath(); c.moveTo(Math.cos(a)*r*.5,Math.sin(a)*r*.5); c.lineTo(Math.cos(a)*r*.56,Math.sin(a)*r*.56); c.stroke(); }
+      c.lineWidth=r*.07; c.beginPath(); c.moveTo(0,0); c.lineTo(Math.cos(-t*1.2)*r*.32,Math.sin(-t*1.2)*r*.32); c.stroke();
+      c.lineWidth=r*.05; c.beginPath(); c.moveTo(0,0); c.lineTo(Math.cos(-t*6)*r*.48,Math.sin(-t*6)*r*.48); c.stroke(); break;
+    case 'puffer':
+      c.fillStyle='rgba(120,20,60,.35)'; for(const [a,b] of [[-.4,.3],[.1,.5],[.45,.15],[-.1,-.05],[.35,-.4],[-.5,-.2]]){ c.beginPath(); c.arc(a*r,b*r,r*.07,0,TAU); c.fill(); }
+      c.fillStyle='#2a0a18'; c.beginPath(); c.arc(-r*.28,-r*.3,r*.08,0,TAU); c.arc(r*.28,-r*.3,r*.08,0,TAU); c.fill(); break;
+    case 'warp':
+      c.save(); c.rotate(-t*4); c.strokeStyle='rgba(255,255,255,.85)'; c.lineWidth=r*.07; c.lineCap='round'; c.beginPath();
+      for(let i=0;i<=40;i++){ const a=i/40*TAU*2, rr=r*.06+i/40*r*.72; i?c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr); } c.stroke(); c.restore(); break;
   }
   if(o.frozen>0){ c.fillStyle='rgba(180,235,255,.45)'; c.fillRect(-r,-r,2*r,2*r); c.strokeStyle='rgba(255,255,255,.7)'; c.lineWidth=2; c.beginPath(); c.moveTo(-r*.6,-r*.2); c.lineTo(-r*.1,r*.3); c.lineTo(r*.5,-r*.1); c.stroke(); }
   if(o.flash>0){ c.fillStyle=`rgba(255,255,255,${Math.min(.8,o.flash*6)})`; c.fillRect(-r,-r,2*r,2*r); }
@@ -384,6 +414,8 @@ function drawBall(c,type,x,y,r,o={}){
     c.strokeStyle='#c9a46a'; c.lineWidth=Math.max(1.5,r*.07); c.beginPath(); c.moveTo(0,-r*1.08); c.quadraticCurveTo(r*.25,-r*1.35,r*.35,-r*1.22); c.stroke();
     c.fillStyle=Math.sin(t*30)>0?'#ffd23f':'#ff5a2a'; c.beginPath(); c.arc(r*.37,-r*1.22,r*.1+Math.random()*r*.05,0,TAU); c.fill();
   }
+  if(type==='puffer'){ const big=o.puff>0, n=big?16:10, L=big?r*.32:r*.12; c.fillStyle=big?'#ffd1e3':'#e07aa3';
+    for(let i=0;i<n;i++){ const a=i/n*TAU+(o.rot||0)*.3; c.beginPath(); c.moveTo(Math.cos(a-.12)*r*.97,Math.sin(a-.12)*r*.97); c.lineTo(Math.cos(a)*(r+L),Math.sin(a)*(r+L)); c.lineTo(Math.cos(a+.12)*r*.97,Math.sin(a+.12)*r*.97); c.closePath(); c.fill(); } }
   if(o.shield>0){ c.strokeStyle=`rgba(140,190,255,${.6+.3*Math.sin(t*8)})`; c.lineWidth=4; c.beginPath();
     for(let i=0;i<6;i++){ const a=i/6*TAU+t; i?c.lineTo(Math.cos(a)*(r+9),Math.sin(a)*(r+9)):c.moveTo(Math.cos(a)*(r+9),Math.sin(a)*(r+9)); } c.closePath(); c.stroke(); }
   if(o.hp!=null){
@@ -469,12 +501,12 @@ function showGame(){
   $('#quit').textContent=G.mode==='online'?'Leave match':'Quit match';
   resize();
 }
-function makeBall(type,side,max){ return {type,side,x:side?450:150,y:300+rand(-90,90),vx:0,vy:0,r:34,hp:max,max,t1:rand(.6,1.3),frozen:0,ghost:0,flash:0,burnCd:0,rot:0,ang:side?Math.PI:0,shield:0,dash:0,pulse:0,splitCd:0}; }
+function makeBall(type,side,max){ return {type,side,x:side?450:150,y:300+rand(-90,90),vx:0,vy:0,r:34,hp:max,max,t1:rand(.6,1.3),frozen:0,ghost:0,flash:0,burnCd:0,rot:0,ang:side?Math.PI:0,shield:0,dash:0,pulse:0,splitCd:0,puff:0,puffCd:0,ambush:0,holeCd:0,hist:[],histT:0}; }
 function startRound(){
   G.round++; $('#roundLbl').textContent='ROUND '+G.round;
   const foeHp=G.mode==='bot'?DIFF[G.diff].hp:100;
   G.balls=[makeBall(G.types[0],0,100),makeBall(G.types[1],1,foeHp)];
-  G.mins=[];G.shots=[];G.fires=[];G.bombs=[];G.lasers=[];G.parts=[];G.texts=[];G.bolts=[];G.rings=[];
+  G.mins=[];G.shots=[];G.fires=[];G.bombs=[];G.lasers=[];G.holes=[];G.parts=[];G.texts=[];G.bolts=[];G.rings=[];
   G.state='aim'; G.aimer=0; G.aimT=10; G.locked=[false,false]; G.pairCd=0;
   const [p,e]=G.balls;
   G.angles=[rand(-.6,.6), Math.PI+rand(-.6,.6)];
@@ -528,7 +560,9 @@ function damage(t,amt,by,opt={}){
   if(t.ghost>0){ if(!opt.quiet) text(t.x,t.y-t.r-8,'DODGE','#dfe6ff',18); return 0; }
   if(t.shield>0&&!t.min){ t.shield=0; text(t.x,t.y-t.r-8,'BLOCK','#9cc4ff',20); sfx('block');
     if(opt.att&&!opt.reflected) damage(opt.att,8,t.side,{reflected:true}); return 0; }
+  if(t.puff>0&&!t.min) amt=Math.ceil(amt*.5);
   t.hp-=amt; t.flash=.12; G.dealt[by]+=amt;
+  if(!t.min&&t.type==='puffer'&&t.puffCd<=0&&amt>=3&&t.hp>0){ t.puff=2.4; t.puffCd=3.6; t.r=48; text(t.x,t.y-t.r-8,'PUFF!','#ffd1e3',20); sfx('puff'); }
   text(t.x+rand(-12,12),t.y-t.r-6,'-'+amt,'#ff4d5e',t.min?16:24);
   if(opt.att&&opt.att.type==='ghost'&&!opt.att.min){ const a=opt.att, h=Math.min(8,a.max-a.hp); if(h>0){ a.hp+=h; text(a.x,a.y-a.r-6,'+'+h,'#5dff8f',20); } }
   if(!t.min&&t.type==='slime'&&t.splitCd<=0&&t.hp>0){ t.splitCd=.35; spawnMin(t,'slime'); }
@@ -536,17 +570,21 @@ function damage(t,amt,by,opt={}){
   return amt;
 }
 function touch(att,tgt){
-  const amt=att.dash>0?20:BALLS[att.type].touch;
+  let amt=att.dash>0?20:BALLS[att.type].touch;
+  if(att.puff>0) amt+=8;
+  if(att.ambush>0){ amt+=8; att.ambush=0; text(att.x,att.y-att.r-8,'AMBUSH!','#8ff0ff',20); }
   damage(tgt,amt,att.side,{att});
   if(att.type==='frost') tgt.frozen=1.6;
   if(tgt.type==='cactus'&&!tgt.ghost) damage(att,4,tgt.side,{quiet:true});
+  if(tgt.puff>0&&!tgt.ghost) damage(att,3,tgt.side,{quiet:true});
 }
 function wall(o){ let h=false; if(o.x<o.r){o.x=o.r;o.vx=Math.abs(o.vx);h=true} if(o.x>W-o.r){o.x=W-o.r;o.vx=-Math.abs(o.vx);h=true} if(o.y<o.r){o.y=o.r;o.vy=Math.abs(o.vy);h=true} if(o.y>W-o.r){o.y=W-o.r;o.vy=-Math.abs(o.vy);h=true} return h; }
 function foeOf(b){ return G.balls[1-b.side]; }
 function spawnMin(owner,kind){
   const mine=G.mins.filter(m=>m.owner===owner.side&&m.kind===kind&&!m.dead).length; if(mine>=6) return;
-  const a=rand(0,TAU), s=kind==='bee'?220:240;
-  G.mins.push({min:true,kind,owner:owner.side,x:owner.x+Math.cos(a)*owner.r*.6,y:owner.y+Math.sin(a)*owner.r*.6,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:kind==='bee'?11:12,hp:kind==='bee'?12:10,max:12,cd:.5,flash:0,ghost:0});
+  if(kind==='clone'&&mine>=3) return;
+  const a=rand(0,TAU), s=kind==='bee'?220:kind==='clone'?290:240;
+  G.mins.push({min:true,kind,owner:owner.side,x:owner.x+Math.cos(a)*owner.r*.6,y:owner.y+Math.sin(a)*owner.r*.6,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:kind==='bee'?11:kind==='clone'?24:12,hp:kind==='bee'?12:kind==='clone'?26:10,max:12,cd:.5,flash:0,ghost:0});
   if(kind==='slime') sfx('slime');
 }
 function segDist(px,py,x1,y1,x2,y2){ const dx=x2-x1,dy=y2-y1,l=dx*dx+dy*dy||1; let t=((px-x1)*dx+(py-y1)*dy)/l; t=Math.max(0,Math.min(1,t)); return Math.hypot(px-(x1+dx*t),py-(y1+dy*t)); }
@@ -570,6 +608,22 @@ function ability(b,dt){
     case 'shield': if(b.shield<=0){ b.shield=1; sfx('shield'); } break;
     case 'laser': G.lasers.push({x:b.x,y:b.y,ang:Math.atan2(e.y-b.y,e.x-b.x),warn:.6,life:.25,owner:b.side,src:b}); sfx('charge'); break;
     case 'rocket': { const a=Math.atan2(e.y-b.y,e.x-b.x); b.vx=Math.cos(a); b.vy=Math.sin(a); b.dash=.7; text(b.x,b.y-b.r-8,'BOOST','#ffd23f',18); sfx('boost'); break; }
+    case 'hole': { const hx=Math.min(W-40,Math.max(40,e.x+e.vx*.45)), hy=Math.min(W-40,Math.max(40,e.y+e.vy*.45)); G.holes.push({x:hx,y:hy,life:2.2,max:2.2,owner:b.side}); text(hx,hy-30,'BLACK HOLE','#d6b3ff',18); } sfx('hole'); break;
+    case 'mirror': spawnMin(b,'clone'); text(b.x,b.y-b.r-8,'COPY','#ffffff',18); sfx('mirror'); break;
+    case 'boomer': { const a=Math.atan2(e.y-b.y,e.x-b.x); G.shots.push({kind:'boom',x:b.x+Math.cos(a)*b.r,y:b.y+Math.sin(a)*b.r,vx:Math.cos(a)*560,vy:Math.sin(a)*560,owner:b.side,r:16,dmg:9,age:0,hits:0,src:b}); sfx('throw'); break; }
+    case 'clock': {
+      const old=b.hist.find(h=>G.roundT-h.t>=2.3)||b.hist[0];
+      if(old){ const heal=Math.max(0,Math.min(20,Math.round(old.hp-b.hp)));
+        ring(b.x,b.y,b.r,10,.4,'255,215,110'); b.x=old.x; b.y=old.y; ring(b.x,b.y,10,70,.45,'255,215,110');
+        if(heal>0){ b.hp+=heal; text(b.x,b.y-b.r-8,'REWIND +'+heal,'#ffe48a',20); } else text(b.x,b.y-b.r-8,'REWIND','#ffe48a',18);
+        b.hist=[]; sfx('rewind'); }
+      break; }
+    case 'warp': {
+      const sp=Math.hypot(e.vx,e.vy)||1, bx=e.x+e.vx/sp*130, by=e.y+e.vy/sp*130;
+      ring(b.x,b.y,b.r,6,.35,'90,220,255'); burst(b.x,b.y,'#8ff0ff',10,200,4);
+      b.x=Math.min(W-b.r,Math.max(b.r,bx)); b.y=Math.min(W-b.r,Math.max(b.r,by));
+      const a=Math.atan2(e.y-b.y,e.x-b.x); b.vx=Math.cos(a); b.vy=Math.sin(a); b.ambush=1.2;
+      ring(b.x,b.y,6,60,.4,'90,220,255'); burst(b.x,b.y,'#8ff0ff',10,200,4); sfx('warp'); break; }
   }
 }
 
@@ -578,11 +632,14 @@ function step(dt){
   const mult=Math.min(2.3,1+G.roundT*.02);
   for(const b of G.balls){
     b.frozen=Math.max(0,b.frozen-dt); b.ghost=Math.max(0,b.ghost-dt); b.flash=Math.max(0,b.flash-dt); b.burnCd-=dt; b.splitCd-=dt;
-    b.dash=Math.max(0,b.dash-dt); b.pulse=Math.max(0,b.pulse-dt);
+    b.dash=Math.max(0,b.dash-dt); b.pulse=Math.max(0,b.pulse-dt); b.ambush=Math.max(0,b.ambush-dt); b.puffCd-=dt; b.holeCd-=dt;
+    if(b.puff>0){ b.puff-=dt; if(b.puff<=0){ b.puff=0; b.r=34; } }
+    if(b.type==='clock'){ b.histT-=dt; if(b.histT<=0){ b.histT=.1; b.hist.push({t:G.roundT,hp:b.hp,x:b.x,y:b.y}); if(b.hist.length>30) b.hist.shift(); } }
     if(b.type==='magnet'){ const e=foeOf(b), dx=b.x-e.x, dy=b.y-e.y, d=Math.hypot(dx,dy)||1, f=(b.pulse>0?1500:260)*dt*BASE/100; e.vx+=dx/d*f; e.vy+=dy/d*f; }
   }
   for(const b of G.balls){
-    const sp=BASE*mult*(b.frozen>0?.42:1)*(b.dash>0?2.3:1), m=Math.hypot(b.vx,b.vy)||1;
+    b.held=Math.max(0,(b.held||0)-dt);
+    const sp=BASE*mult*(b.frozen>0?.42:1)*(b.dash>0?2.3:1)*(b.held>0?.62:1), m=Math.hypot(b.vx,b.vy)||1;
     b.vx=b.vx/m*sp; b.vy=b.vy/m*sp; b.x+=b.vx*dt; b.y+=b.vy*dt;
     if(wall(b)) sfx('wall');
     b.rot+=dt*2; b.ang=Math.atan2(b.vy,b.vx);
@@ -602,14 +659,26 @@ function step(dt){
     const e=G.balls[1-z.owner]; z.cd-=dt; z.flash=Math.max(0,z.flash-dt);
     const ex=e.x-z.x, ey=e.y-z.y, ed=Math.hypot(ex,ey)||1;
     if(z.kind==='bee'){ z.vx+=ex/ed*650*dt; z.vy+=ey/ed*650*dt; const s=Math.hypot(z.vx,z.vy); if(s>270){z.vx*=270/s;z.vy*=270/s} }
-    else { const s=Math.hypot(z.vx,z.vy)||1; z.vx=z.vx/s*240; z.vy=z.vy/s*240; }
+    else { const s=Math.hypot(z.vx,z.vy)||1, sp=z.kind==='clone'?290:240; z.vx=z.vx/s*sp; z.vy=z.vy/s*sp; }
     z.x+=z.vx*dt; z.y+=z.vy*dt; wall(z);
     if(ed<z.r+e.r&&!e.ghost){ const nx=ex/ed,ny=ey/ed; z.x=e.x-nx*(z.r+e.r); z.y=e.y-ny*(z.r+e.r); z.vx=-nx*300+rand(-80,80); z.vy=-ny*300+rand(-80,80);
-      if(z.cd<=0){ z.cd=.6; damage(e,z.kind==='bee'?3:4,z.owner); damage(z,BALLS[e.type].touch,e.side,{att:e}); sfx('sting'); } }
+      if(z.cd<=0){ z.cd=.6; damage(e,z.kind==='bee'?3:z.kind==='clone'?7:4,z.owner); damage(z,BALLS[e.type].touch,e.side,{att:e}); sfx('sting'); } }
   }
   G.mins=G.mins.filter(z=>!z.dead);
   // icicles + needles
-  for(const s of G.shots){ s.x+=s.vx*dt; s.y+=s.vy*dt; if(s.x<-10||s.x>W+10||s.y<-10||s.y>W+10){s.dead=true;continue}
+  for(const s of G.shots){
+    if(s.kind==='boom'){ // fly out, slow down, come back to the thrower
+      s.age+=dt; const o=s.src;
+      if(s.age<.45){ s.vx*=Math.pow(.25,dt); s.vy*=Math.pow(.25,dt); }
+      else { const ox=o.x-s.x, oy=o.y-s.y, od=Math.hypot(ox,oy)||1; s.vx+=ox/od*2600*dt; s.vy+=oy/od*2600*dt; const sp=Math.hypot(s.vx,s.vy); if(sp>620){ s.vx*=620/sp; s.vy*=620/sp; }
+        if(od<o.r||s.age>2.4){ s.dead=true; continue; } }
+      s.x+=s.vx*dt; s.y+=s.vy*dt; s.x=Math.min(W-6,Math.max(6,s.x)); s.y=Math.min(W-6,Math.max(6,s.y));
+      const e=G.balls[1-s.owner], phase=s.age<.45?1:2;
+      if(!e.ghost&&!(s.hits&phase)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+s.r){ s.hits|=phase; damage(e,s.dmg,s.owner); burst(s.x,s.y,'#f3c98b',6,150,3); sfx('sting'); }
+      for(const z of G.mins) if(z.owner!==s.owner&&!z.dead&&z.cd<=0&&Math.hypot(z.x-s.x,z.y-s.y)<z.r+s.r){ z.cd=.3; damage(z,s.dmg,s.owner); }
+      continue;
+    }
+    s.x+=s.vx*dt; s.y+=s.vy*dt; if(s.x<-10||s.x>W+10||s.y<-10||s.y>W+10){s.dead=true;continue}
     const e=G.balls[1-s.owner];
     if(!e.ghost&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+s.r){ s.dead=true; damage(e,s.dmg,s.owner); if(s.kind==='ice') e.frozen=Math.max(e.frozen,.6); burst(s.x,s.y,s.kind==='ice'?'#bff0ff':'#c8f59a',6,140,3); continue; }
     for(const z of G.mins) if(z.owner!==s.owner&&!z.dead&&Math.hypot(z.x-s.x,z.y-s.y)<z.r+s.r){ s.dead=true; damage(z,s.dmg,s.owner); break; }
@@ -621,11 +690,21 @@ function step(dt){
     for(const z of G.mins) if(z.owner!==f.owner&&!z.dead&&z.cd<=0&&Math.hypot(z.x-f.x,z.y-f.y)<z.r+10){ z.cd=.3; damage(z,2,f.owner,{quiet:true}); }
   }
   G.fires=G.fires.filter(f=>f.life>0);
+  // black holes pull the enemy in and crush it in the middle
+  for(const h of G.holes){ h.life-=dt; const e=G.balls[1-h.owner], R=150;
+    const dx=h.x-e.x, dy=h.y-e.y, d=Math.hypot(dx,dy)||1;
+    if(d<R&&!e.ghost){ const f=1100*dt*(1-d/R+.25); e.vx+=dx/d*f; e.vy+=dy/d*f;
+      if(d<70) e.held=.12;
+      if(d<e.r+24&&e.holeCd<=0){ e.holeCd=.3; damage(e,4,h.owner,{quiet:true}); if(!G.silent&&Math.random()<.6) burst(e.x,e.y,'#c99bff',3,90,4); } }
+    for(const z of G.mins){ if(z.owner===h.owner||z.dead) continue; const zx=h.x-z.x, zy=h.y-z.y, zd=Math.hypot(zx,zy)||1;
+      if(zd<R){ z.vx+=zx/zd*900*dt; z.vy+=zy/zd*900*dt; if(zd<24&&z.cd<=0){ z.cd=.3; damage(z,4,h.owner,{quiet:true}); } } }
+  }
+  G.holes=G.holes.filter(h=>h.life>0);
   // bombs fly to where the enemy is heading, then blow up
   for(const bm of G.bombs){ bm.t-=dt; const k=Math.min(1,dt*14); bm.x+=(Math.min(W-14,Math.max(14,bm.tx))-bm.x)*k; bm.y+=(Math.min(W-14,Math.max(14,bm.ty))-bm.y)*k; if(bm.t>0) continue; bm.dead=true;
     const e=G.balls[1-bm.owner];
     ring(bm.x,bm.y,10,BOMB_R,.35,'255,200,90'); burst(bm.x,bm.y,'#ffb02a',22,320,6); burst(bm.x,bm.y,'#5a5f78',10,180,8);
-    if(Math.hypot(e.x-bm.x,e.y-bm.y)<BOMB_R+e.r*.5) damage(e,12,bm.owner);
+    if(Math.hypot(e.x-bm.x,e.y-bm.y)<BOMB_R+e.r*.5) damage(e,11,bm.owner);
     for(const z of G.mins) if(z.owner!==bm.owner&&Math.hypot(z.x-bm.x,z.y-bm.y)<BOMB_R) damage(z,12,bm.owner);
     G.shake=Math.max(G.shake,10); sfx('boom');
   }
@@ -724,6 +803,12 @@ function render(){
   const sx=G.shake?rand(-G.shake,G.shake):0, sy=G.shake?rand(-G.shake,G.shake):0;
   c.save(); c.translate(sx,sy);
   for(const f of G.fires){ const a=Math.max(0,f.life/f.max), r=12+8*(1-a); const g=c.createRadialGradient(f.x,f.y,1,f.x,f.y,r); g.addColorStop(0,`rgba(255,230,120,${.8*a})`); g.addColorStop(.5,`rgba(255,120,30,${.55*a})`); g.addColorStop(1,'rgba(255,60,0,0)'); c.fillStyle=g; c.beginPath(); c.arc(f.x,f.y,r,0,TAU); c.fill(); }
+  for(const h of (G.holes||[])){ const a=Math.min(1,h.life/.4,(h.max-h.life)/.3+.2);
+    c.save(); c.globalAlpha=a; c.translate(h.x,h.y);
+    c.setLineDash([4,10]); c.strokeStyle='rgba(170,120,255,.35)'; c.lineWidth=2; c.beginPath(); c.arc(0,0,150,0,TAU); c.stroke(); c.setLineDash([]);
+    const g=c.createRadialGradient(0,0,4,0,0,60); g.addColorStop(0,'#000'); g.addColorStop(.45,'rgba(40,10,80,.95)'); g.addColorStop(1,'rgba(120,60,220,0)'); c.fillStyle=g; c.beginPath(); c.arc(0,0,60,0,TAU); c.fill();
+    c.rotate(G.t*5); c.lineCap='round'; for(let i=0;i<4;i++){ c.rotate(TAU/4); c.strokeStyle=i%2?'rgba(255,120,220,.7)':'rgba(190,150,255,.8)'; c.lineWidth=3; c.beginPath(); c.arc(0,0,26+i*7,0,1.6); c.stroke(); }
+    c.restore(); }
   for(const bm of G.bombs){
     c.setLineDash([6,8]); c.strokeStyle=`rgba(255,90,60,${.25+.25*Math.sin(G.t*20)})`; c.lineWidth=2; c.beginPath(); c.arc(bm.x,bm.y,BOMB_R,0,TAU); c.stroke(); c.setLineDash([]);
     c.fillStyle='#22232f'; c.beginPath(); c.arc(bm.x,bm.y,13,0,TAU); c.fill();
@@ -743,10 +828,14 @@ function render(){
     c.beginPath(); c.moveTo(p.x+cx*tip,p.y+cy*tip); c.lineTo(bx-cy*14,by+cx*14); c.lineTo(bx+cy*14,by-cx*14); c.closePath(); c.fill();
   }
   for(const s of G.shots){ const a=Math.atan2(s.vy,s.vx); c.save(); c.translate(s.x,s.y); c.rotate(a);
-    if(s.kind==='ice'){ c.fillStyle='#dff7ff'; c.beginPath(); c.moveTo(12,0); c.lineTo(-8,-5); c.lineTo(-8,5); c.closePath(); c.fill(); }
+    if(s.kind==='boom'){ c.rotate(G.t*22); c.strokeStyle='#5c3511'; c.lineWidth=8; c.lineCap='round'; c.lineJoin='round'; c.beginPath(); c.moveTo(-12,-9); c.lineTo(0,6); c.lineTo(12,-9); c.stroke(); c.strokeStyle='#f3c98b'; c.lineWidth=4; c.stroke(); }
+    else if(s.kind==='ice'){ c.fillStyle='#dff7ff'; c.beginPath(); c.moveTo(12,0); c.lineTo(-8,-5); c.lineTo(-8,5); c.closePath(); c.fill(); }
     else { c.strokeStyle='#d8ffb0'; c.lineWidth=3; c.beginPath(); c.moveTo(-8,0); c.lineTo(9,0); c.stroke(); }
     c.restore(); }
-  for(const z of G.mins){ c.save(); c.translate(z.x,z.y);
+  for(const z of G.mins){
+    if(z.kind==='clone'){ const ob=G.balls[z.owner]; c.save(); c.globalAlpha=.7; drawBall(c,ob?ob.type:'mirror',z.x,z.y,z.r,{t:G.t,rot:G.t,flash:z.flash,glow:false}); c.restore();
+      c.strokeStyle=z.owner===0?'rgba(127,227,255,.6)':'rgba(255,138,154,.6)'; c.lineWidth=2; c.setLineDash([4,4]); c.beginPath(); c.arc(z.x,z.y,z.r+4,0,TAU); c.stroke(); c.setLineDash([]); continue; }
+    c.save(); c.translate(z.x,z.y);
     if(z.kind==='bee'){ c.rotate(Math.atan2(z.vy,z.vx));
       const w=Math.sin(G.t*60)*4; c.fillStyle='rgba(255,255,255,.7)'; c.beginPath(); c.ellipse(-2,-8-w*.3,6,4+w*.4,0,0,TAU); c.ellipse(-2,8+w*.3,6,4+w*.4,0,0,TAU); c.fill();
       c.fillStyle=z.flash>0?'#fff':'#ffc21a'; c.beginPath(); c.ellipse(0,0,z.r,z.r*.78,0,0,TAU); c.fill();
@@ -762,7 +851,8 @@ function render(){
   for(const b of G.balls){ if(b.dead) continue;
     c.save(); c.strokeStyle=b.side===0?'rgba(127,227,255,.6)':'rgba(255,138,154,.6)'; c.lineWidth=3; c.beginPath(); c.arc(b.x,b.y,b.r+5,0,TAU); c.stroke(); c.restore();
     if(b.type==='magnet'&&b.pulse>0){ const e=G.balls[1-b.side]; c.strokeStyle=`rgba(255,120,140,${b.pulse*.6})`; c.lineWidth=3; c.setLineDash([4,6]); c.beginPath(); c.moveTo(b.x,b.y); c.lineTo(e.x,e.y); c.stroke(); c.setLineDash([]); }
-    drawBall(c,b.type,b.x,b.y,b.r,{hp:b.hp,t:G.t,rot:b.rot,ang:b.ang,frozen:b.frozen,ghost:b.ghost,flash:b.flash,shield:b.shield}); }
+    if(b.ambush>0){ c.strokeStyle=`rgba(140,240,255,${.5+.4*Math.sin(G.t*30)})`; c.lineWidth=4; c.beginPath(); c.arc(b.x,b.y,b.r+10,0,TAU); c.stroke(); }
+    drawBall(c,b.type,b.x,b.y,b.r,{hp:b.hp,t:G.t,rot:b.rot,ang:b.ang,frozen:b.frozen,ghost:b.ghost,flash:b.flash,shield:b.shield,puff:b.puff}); }
   for(const b of G.bolts){ const a=b.life/.3; c.lineJoin='round';
     c.strokeStyle=`rgba(190,150,255,${a*.6})`; c.lineWidth=10; c.beginPath(); b.pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y)); c.stroke();
     c.strokeStyle=`rgba(255,255,255,${a})`; c.lineWidth=3; c.stroke(); }
@@ -1042,9 +1132,10 @@ function snapshot(){
   const st={aim:0,fight:1,roundEnd:2,over:3}[G.state]||0;
   const s={m:G.mid,s:st,r:G.round,at:R0(G.aimT*10),h:G.hearts.slice(),ty:G.types.slice(),nm:G.names.slice(),lk:[G.locked?+G.locked[0]:0,G.locked?+G.locked[1]:0],
     w:G.winner==null?-1:G.winner,dl:G.dealt.slice(),sk:R0(G.shake),fl:R0(flashSky*100),
-    b:G.balls.map(b=>[R0(b.x),R0(b.y),R0(b.vx),R0(b.vy),R0(Math.max(0,b.hp)),(b.frozen>0?1:0)|(b.ghost>0?2:0)|(b.shield>0?4:0)|(b.dash>0?8:0)|(b.flash>0?16:0)|(b.dead?32:0),R0(b.rot*10),R0(b.pulse*10)]),
-    n:G.mins.map(z=>[R0(z.x),R0(z.y),R0(z.vx),R0(z.vy),z.kind==='bee'?0:1,z.owner,z.flash>0?1:0]),
-    p:G.shots.map(q=>[R0(q.x),R0(q.y),R0(q.vx),R0(q.vy),q.kind==='ice'?0:1]),
+    b:G.balls.map(b=>[R0(b.x),R0(b.y),R0(b.vx),R0(b.vy),R0(Math.max(0,b.hp)),(b.frozen>0?1:0)|(b.ghost>0?2:0)|(b.shield>0?4:0)|(b.dash>0?8:0)|(b.flash>0?16:0)|(b.dead?32:0)|(b.puff>0?64:0)|(b.ambush>0?128:0),R0(b.rot*10),R0(b.pulse*10),R0(b.r)]),
+    n:G.mins.map(z=>[R0(z.x),R0(z.y),R0(z.vx),R0(z.vy),{bee:0,slime:1,clone:2}[z.kind]||0,z.owner,z.flash>0?1:0]),
+    p:G.shots.map(q=>[R0(q.x),R0(q.y),R0(q.vx),R0(q.vy),{ice:0,needle:1,boom:2}[q.kind]||0]),
+    k:G.holes.map(h=>[R0(h.x),R0(h.y),R0(h.life*10)]),
     f:G.fires.map(f=>[R0(f.x),R0(f.y),R0(f.life*10)]),
     o:G.bombs.map(b=>[R0(b.x),R0(b.y)]),
     z:G.lasers.map(L=>[R0(L.x),R0(L.y),R0(L.ang*1000),L.warn>0?1:0,R0(L.life*100),R0(L.x2||0),R0(L.y2||0)]),
@@ -1064,14 +1155,14 @@ function guestNetTick(dt){
     if(!Array.isArray(g.ty)||!BALLS[g.ty[0]]||!BALLS[g.ty[1]]) return;
     NET.mid=g.m; NET.inMatch=true; if(MM.state==='accepted'){ MM.state='idle'; lobbyPresence({}); } NET.seenEv=0; NET.lastSnapRef=null; NET.shownOver=false;
     G={state:'aim',mode:'online',net:'guest',types:g.ty.slice(0,2),names:[cleanNick(g.nm&&g.nm[0])||'Host',myNick()],hearts:[3,3],round:0,t:0,shake:0,dealt:[0,0],mid:g.m,
-       balls:null,mins:[],shots:[],fires:[],bombs:[],lasers:[],parts:[],texts:[],bolts:[],rings:[],angles:[0,Math.PI],myLocked:false,lockedRound:-1};
+       balls:null,mins:[],shots:[],fires:[],bombs:[],lasers:[],holes:[],parts:[],texts:[],bolts:[],rings:[],angles:[0,Math.PI],myLocked:false,lockedRound:-1};
     showGame(); $('#result').hidden=true;
   }
   if(o.presence!==NET.lastSnapRef){ NET.lastSnapRef=o.presence; NET.snapAt=performance.now(); applySnap(g); }
   // extrapolate moving things between snapshots
   const since=Math.min(.12,(performance.now()-NET.snapAt)/1000);
   if(G.balls) for(const b of G.balls){ const tx=b.sx+b.vx*since, ty=b.sy+b.vy*since, k=Math.min(1,dt*25); b.x+=(tx-b.x)*k; b.y+=(ty-b.y)*k; }
-  for(const q of G.shots){ q.x=q.sx+q.vx*since; q.y=q.sy+q.vy*since; }
+  for(const q of G.shots){ const k=q.kind==='boom'?.4:1; q.x=q.sx+q.vx*since*k; q.y=q.sy+q.vy*since*k; }
   for(const z of G.mins){ z.x=z.sx+z.vx*since; z.y=z.sy+z.vy*since; }
 }
 function applySnap(g){
@@ -1088,11 +1179,12 @@ function applySnap(g){
     if(!G.balls||G.round!==prevRound) G.balls=[0,1].map(i=>({type:G.types[i],side:i,r:34,x:num(bs[i][0]),y:num(bs[i][1])}));
     bs.forEach((v,i)=>{ const b=G.balls[i], f=num(v[5]);
       b.sx=num(v[0]); b.sy=num(v[1]); b.vx=num(v[2]); b.vy=num(v[3]); b.hp=num(v[4]); b.rot=num(v[6])/10; b.pulse=num(v[7])/10; b.ang=Math.atan2(b.vy,b.vx)||b.ang||0;
-      b.frozen=f&1?1:0; b.ghost=f&2?1:0; b.shield=f&4?1:0; b.dash=f&8?1:0; b.flash=f&16?.1:0; b.dead=!!(f&32);
+      b.frozen=f&1?1:0; b.ghost=f&2?1:0; b.shield=f&4?1:0; b.dash=f&8?1:0; b.flash=f&16?.1:0; b.dead=!!(f&32); b.puff=f&64?1:0; b.ambush=f&128?1:0; b.r=Math.min(60,Math.max(20,num(v[8],34)));
       if(G.state==='aim'||Math.hypot(b.sx-b.x,b.sy-b.y)>80){ b.x=b.sx; b.y=b.sy; } });
   }
-  G.mins=arr(g.n).map(v=>({sx:num(v[0]),sy:num(v[1]),x:num(v[0]),y:num(v[1]),vx:num(v[2]),vy:num(v[3]),kind:v[4]?'slime':'bee',owner:num(v[5]),flash:v[6]?1:0,r:v[4]?12:11}));
-  G.shots=arr(g.p).map(v=>({sx:num(v[0]),sy:num(v[1]),x:num(v[0]),y:num(v[1]),vx:num(v[2]),vy:num(v[3]),kind:v[4]?'needle':'ice'}));
+  G.mins=arr(g.n).map(v=>{ const kind=['bee','slime','clone'][num(v[4])]||'bee'; return {sx:num(v[0]),sy:num(v[1]),x:num(v[0]),y:num(v[1]),vx:num(v[2]),vy:num(v[3]),kind,owner:num(v[5])?1:0,flash:v[6]?1:0,r:kind==='bee'?11:kind==='clone'?24:12}; });
+  G.shots=arr(g.p).map(v=>({sx:num(v[0]),sy:num(v[1]),x:num(v[0]),y:num(v[1]),vx:num(v[2]),vy:num(v[3]),kind:['ice','needle','boom'][num(v[4])]||'ice'}));
+  G.holes=arr(g.k).map(v=>({x:num(v[0]),y:num(v[1]),life:num(v[2])/10,max:2.2}));
   G.fires=arr(g.f).map(v=>({x:num(v[0]),y:num(v[1]),life:num(v[2])/10,max:FIRE_LIFE}));
   G.bombs=arr(g.o).map(v=>({x:num(v[0]),y:num(v[1])}));
   G.lasers=arr(g.z).map(v=>({x:num(v[0]),y:num(v[1]),ang:num(v[2])/1000,warn:v[3]?1:0,life:num(v[4])/100,x2:v[3]?null:num(v[5]),y2:num(v[6])}));
@@ -1127,7 +1219,7 @@ function guestLock(){
 /* ---------- test hook: run a fast silent match between two balls ---------- */
 window.__ballBrawlSim=(t0,t1,rounds=1)=>{ const keep=G; let w=[0,0], dealt=[0,0];
   for(let r=0;r<rounds;r++){ G={silent:true,mode:'pvp',types:[t0,t1],hearts:[1,1],round:0,t:0,shake:0,dealt:[0,0],evlog:[]};
-    G.balls=[makeBall(t0,0,100),makeBall(t1,1,100)]; G.mins=[];G.shots=[];G.fires=[];G.bombs=[];G.lasers=[];G.parts=[];G.texts=[];G.bolts=[];G.rings=[];G.pairCd=0;
+    G.balls=[makeBall(t0,0,100),makeBall(t1,1,100)]; G.mins=[];G.shots=[];G.fires=[];G.bombs=[];G.lasers=[];G.holes=[];G.parts=[];G.texts=[];G.bolts=[];G.rings=[];G.pairCd=0;
     G.balls.forEach(b=>{ const a=rand(0,TAU); b.vx=Math.cos(a); b.vy=Math.sin(a); }); G.state='fight'; G.roundT=0;
     let n=0; while(G.state==='fight'&&n<60*120){ step(1/180); n++; }
     if(G.state==='roundEnd') w[1-G.lastLoser]++; dealt[0]+=G.dealt[0]; dealt[1]+=G.dealt[1]; }
