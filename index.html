@@ -219,6 +219,18 @@ input::placeholder{color:#55648f}
 @keyframes quake{25%{transform:translate(-7px,3px)}50%{transform:translate(6px,-4px)}75%{transform:translate(-4px,-6px)}100%{transform:translate(0,0)}}
 @media (prefers-reduced-motion:reduce){#sweep .swbar{animation:fade 2.5s forwards}.stage.quake{animation:none}@keyframes fade{0%,100%{opacity:0;transform:translateY(-50%)}15%,85%{opacity:1;transform:translateY(-50%)}}}
 .ctrl{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px}
+#pickBox{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,10,22,.86);border-radius:14px;z-index:3;padding:10px;box-sizing:border-box}
+.pk{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;max-width:520px;text-align:center}
+.pk h3{font-family:var(--display);font-weight:400;font-size:clamp(1.3rem,5vw,1.8rem);margin:0;color:var(--gold)}
+.pk-sub{margin:0;font-weight:800;font-size:.85rem;color:var(--muted)}
+.pk-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.pk-opt{background:var(--panel);border:3px solid var(--line);border-radius:14px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--fg);font-family:var(--body);position:relative;min-width:0;transition:transform .1s}
+.pk-opt:hover{transform:translateY(-2px);border-color:var(--p1)}
+.pk-opt canvas{width:52px;height:52px}
+.pk-opt .nm{font-family:var(--display);font-size:clamp(.8rem,3.4vw,1rem);line-height:1.1}
+.pk-opt .st{font-size:.62rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--gold)}
+.pk-opt .cur{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-family:var(--display);font-size:.62rem;background:var(--p1);color:#0b1324;border-radius:6px;padding:1px 6px;white-space:nowrap}
+.pk-note{margin:0;font-size:.72rem;font-weight:800;color:var(--muted)}
 #wait{font-weight:800;color:var(--muted);font-size:.9rem}
 #quit{font-family:var(--body);font-weight:800;font-size:.8rem;background:none;color:var(--muted);text-decoration:underline;padding:.4em}
 #result{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,10,22,.8);border-radius:14px;overflow-y:auto}
@@ -366,6 +378,15 @@ input::placeholder{color:#55648f}
     <div class="stage" id="stage">
       <div class="frame"><canvas id="cv"></canvas></div>
       <div id="center"></div>
+      <div id="pickBox" hidden>
+        <div class="pk">
+          <h3 id="pkH">Pick your ball</h3>
+          <p class="pk-sub" id="pkSub"></p>
+          <div class="pk-opts" id="pkOpts"></div>
+          <button class="btn btn-gold small" id="pkReroll" type="button">Reroll · 5 coins</button>
+          <p class="pk-note" id="pkNote">1 reroll per round. It swaps in 3 random balls you own.</p>
+        </div>
+      </div>
       <div id="sweep" hidden><div class="swbar"><div class="t1" id="sweepT"></div><div class="t2" id="sweepS"></div></div></div>
       <div id="result" hidden>
         <div class="res">
@@ -408,6 +429,7 @@ input::placeholder{color:#55648f}
         <li><span><b>Aim.</b> Before the timer runs out, tap or drag in the arena to point your arrow, then press Lock Aim.</span></li>
         <li><span><b>Watch it bounce.</b> Balls bounce off the walls and each other. Every bump hurts both balls.</span></li>
         <li><span><b>Pop the other ball.</b> Knock its HP to 0 to win the round. Lose a round and you lose a heart. Run out of hearts and you lose.</span></li>
+        <li><span><b>Switch balls between rounds.</b> Before each new round, pick from 3 balls: the one you just used and 2 others you own. Don't like the choices? You get 1 reroll per round for 5 coins, which swaps in 3 random balls you own.</span></li>
       </ol>
       <p class="note">Balls speed up the longer a round goes. After 45 seconds it's overtime: both balls lose HP and nobody can heal. When both sides are down to their last life, it's sudden death.</p>
       <p class="note">Wins earn coins for new balls, trails and auras. Once you own both 150-coin balls, match rewards drop to 70%, so save up. Daily rewards and quests always pay in full.</p>
@@ -961,17 +983,21 @@ function showGame(){
   const four=G.types.length===4;
   $('#hud').hidden=G.mode==='royale'; $('#roster').hidden=G.mode!=='royale';
   if(G.mode==='royale') buildRoster();
-  else {
+  panelText();
+  $('#menu').hidden=true; $('#game').hidden=false; $('#result').hidden=true; $('#wait').hidden=true; $('#pickBox').hidden=true;
+  $('#hint').textContent=G.mode==='pvp'?'Each player takes a turn to aim. Tap or drag in the arena, then lock.':'Tap or drag in the arena to aim, then press Lock Aim. Arrow keys and Space work too.';
+  $('#quit').textContent=G.mode==='online'?'Leave match':'Quit match';
+  resize();
+}
+function panelText(){
+  const four=G.types.length===4;
+  if(G.mode!=='royale'){
     let n0=G.names[0], b0=BALLS[G.types[0]].name, n1=G.names[1], b1=BALLS[G.types[1]].name;
     if(G.mode==='duo'){ n0='Your team'; b0=`${BALLS[G.types[0]].name.replace(' Ball','')} + ${BALLS[G.types[1]].name.replace(' Ball','')}`; n1='Bot team'; b1=`${BALLS[G.types[2]].name.replace(' Ball','')} + ${BALLS[G.types[3]].name.replace(' Ball','')}`; }
     if(G.mode==='boss'){ n1=`Boss · Level ${G.bossLevel}`; b1='Giant '+BALLS[G.types[1]].name+' · '+G.boss.abil.length+(G.boss.abil.length>1?' powers':' power')+(G.boss.tries?` · −${Math.round(Math.min(.5,.12*G.boss.tries)*100)}% HP`:''); }
     $('#pl0 .pl-name').textContent=n0; $('#pl0 .pl-ball').textContent=b0; $('#pl1 .pl-name').textContent=n1; $('#pl1 .pl-ball').textContent=b1;
     G.icons=[G.types[0],four?G.types[2]:G.types[1]];
   }
-  $('#menu').hidden=true; $('#game').hidden=false; $('#result').hidden=true; $('#wait').hidden=true;
-  $('#hint').textContent=G.mode==='pvp'?'Each player takes a turn to aim. Tap or drag in the arena, then lock.':'Tap or drag in the arena to aim, then press Lock Aim. Arrow keys and Space work too.';
-  $('#quit').textContent=G.mode==='online'?'Leave match':'Quit match';
-  resize();
 }
 function buildRoster(){
   const R=$('#roster'); R.innerHTML='';
@@ -1006,8 +1032,64 @@ function decArena(v){
   const p=arr(v[3]).slice(0,15); for(let i=0;i+2<p.length;i+=3) A.pads.push({x:num(p[i]),y:num(p[i+1]),r:40,a:num(p[i+2])/100});
   return A;
 }
+/* ---------- ball pick between rounds ---------- */
+const PICK_TIME=15, REROLL_COST=5;
+function shuffled(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+function pickChoices(cur){ return [cur,...shuffled(owned.filter(k=>k!==cur)).slice(0,2)]; }
+function rerollChoices(){ return shuffled(owned).slice(0,3); }
+function enterPick(){
+  G.state='pick'; G.pickT=PICK_TIME; G.pickRound=G.round+1;
+  G.pickers=G.mode==='pvp'?[0,1]:[0]; G.pickIdx=0; G.rerolled={}; G.pickOpts={};
+  G.picked=G.types.map((_,i)=>!G.pickers.includes(i)&&!(G.mode==='online'&&i===1));
+  for(const s of G.pickers) G.pickOpts[s]=pickChoices(G.types[s]);
+  $('#lock').hidden=true; $('#center').textContent=''; showPick();
+}
+function curPicker(){ return G.pickers&&G.pickers[G.pickIdx]; }
+function showPick(){
+  const s=curPicker(), box=$('#pickBox');
+  if(s==null){ box.hidden=true; return; }
+  box.hidden=false;
+  $('#pkH').textContent=G.mode==='pvp'?`Player ${s+1}: pick your ball`:`Pick your ball for round ${G.pickRound}`;
+  const opts=$('#pkOpts'); opts.innerHTML='';
+  for(const k of G.pickOpts[s]){ const b=document.createElement('button'); b.type='button'; b.className='pk-opt'; b.dataset.k=k;
+    b.innerHTML=`<canvas width="104" height="104"></canvas><div class="nm"></div><div class="st"></div>`;
+    b.querySelector('.nm').textContent=BALLS[k].name; b.querySelector('.st').textContent=BALLS[k].stat;
+    if(k===G.types[s]){ const t=document.createElement('span'); t.className='cur'; t.textContent='Current'; b.append(t); }
+    b.onclick=()=>{ ac(); choosePick(s,k); }; opts.append(b); }
+  const rr=$('#pkReroll'), used=!!G.rerolled[s];
+  rr.disabled=used||coins<REROLL_COST;
+  rr.textContent=used?'Reroll used this round':coins<REROLL_COST?`Reroll · ${REROLL_COST} coins (you have ${coins})`:`Reroll · ${REROLL_COST} coins`;
+  pickTimerText();
+}
+function pickTimerText(){ $('#pkSub').textContent=`Keep your ball or switch. If time runs out, you keep your current ball. ${Math.max(0,Math.ceil(G.pickT))}s`; }
+$('#pkReroll').onclick=()=>{
+  const s=curPicker(); if(s==null||G.rerolled[s]||coins<REROLL_COST) return;
+  coins-=REROLL_COST; save(); G.rerolled[s]=true; G.pickOpts[s]=rerollChoices(); SFX.coin(); toast(`Rerolled for ${REROLL_COST} coins`,1.6); showPick();
+};
+function choosePick(s,k){
+  if(G.state!=='pick'||s!==curPicker()||!BALLS[k]) return;
+  G.types[s]=k; G.picked[s]=true; SFX.click(); G.pickIdx++;
+  if(curPicker()!=null){ G.pickT=PICK_TIME; showPick(); return; }
+  $('#pickBox').hidden=true;
+  if(G.net==='guest'){ guestSendPick(k); $('#wait').textContent='Waiting for the host…'; $('#wait').hidden=false; return; }
+  maybeStartAfterPick();
+}
+function maybeStartAfterPick(){
+  if(G.state!=='pick') return;
+  if(G.picked.every(Boolean)){ $('#wait').hidden=true; $('#pickBox').hidden=true; startRound(); }
+  else { $('#wait').textContent='Waiting for your opponent to pick…'; $('#wait').hidden=false; }
+}
+function pickTick(dt){
+  G.pickT-=dt; pickTimerText();
+  $('#banner').textContent='PICK YOUR BALL – '+Math.max(0,Math.ceil(G.pickT)); $('#banner').className='';
+  if(G.pickT>0) return;
+  const s=curPicker();
+  if(s!=null){ choosePick(s,G.types[s]); return; } // time's up: keep the current ball
+  if(G.net!=='guest'){ G.picked=G.picked.map(()=>true); maybeStartAfterPick(); }
+}
+
 function startRound(){
-  G.round++;
+  G.round++; panelText(); if(G.mode==='royale') buildRoster();
   G.arena=G.arenaPref==='chaos'?makeArena(pick(ARENA_KINDS)):null; G.inset=0;
   $('#roundLbl').textContent='ROUND '+G.round;
   const sp=spawnPoints(), d=DIFF[G.diff];
@@ -1406,7 +1488,9 @@ function update(dt){
     const bn=$('#banner'); const want=G.ot?'OVERTIME – NO HEALING':''; if(bn.textContent!==want){ bn.textContent=want; bn.className=G.ot?'p2':''; }
     if(G.mode==='boss') hud();
   } else if(G.state==='roundEnd'){
-    G.endT-=dt; if(G.endT<=0){ if(matchOver()) finishMatch(); else startRound(); }
+    G.endT-=dt; if(G.endT<=0){ if(matchOver()) finishMatch(); else enterPick(); }
+  } else if(G.state==='pick'){
+    pickTick(dt);
   }
   tickFx(dt);
 }
@@ -1531,6 +1615,7 @@ function render(){
 }
 function paintHudIcons(){
   if(!G.types) return;
+  if(!$('#pickBox').hidden) document.querySelectorAll('.pk-opt').forEach(b=>paintIcon(b.querySelector('canvas'),b.dataset.k,G.t));
   if(G.mode==='royale'){ const chips=$('#roster').children; G.types.forEach((t,i)=>{ const ch=chips[i]; if(!ch) return; paintIcon(ch.querySelector('canvas'),t,G.t); const out=!!(G.balls&&G.balls[i]&&G.balls[i].dead&&G.state!=='aim'); if(ch.classList.contains('out')!==out) ch.classList.toggle('out',out); }); return; }
   const ic=G.icons||[G.types[0],G.types[1]];
   paintIcon($('#pl0 canvas'),ic[0],G.t); paintIcon($('#pl1 canvas'),ic[1],G.t);
@@ -1581,7 +1666,7 @@ function needName(){
 }
 $('#play').onclick=()=>{ ac(); if(needName()) return; if(mode==='pvp'&&!owned.includes(picks[1])) picks[1]=owned[0]; newMatch(); };
 $('#again').onclick=()=>{ if(G.mode==='online'){ if(NET.role==='host') hostStartMatch(); } else newMatch({mode:G.mode,arena:G.arenaPref}); };
-function toMenu(){ const wasOnline=G.mode==='online'; musicStop(); $('#sweep').hidden=true; $('#stage').classList.remove('quake'); G={state:'menu'}; $('#game').hidden=true; $('#menu').hidden=false; who=0; if(wasOnline){ NET.inMatch=false; netLobbyPresence(); } renderMenu(); }
+function toMenu(){ const wasOnline=G.mode==='online'; musicStop(); $('#sweep').hidden=true; $('#pickBox').hidden=true; $('#stage').classList.remove('quake'); G={state:'menu'}; $('#game').hidden=true; $('#menu').hidden=false; who=0; if(wasOnline){ NET.inMatch=false; netLobbyPresence(); } renderMenu(); }
 $('#change').onclick=()=>{ if(G.mode==='online') netLeave(); toMenu(); };
 $('#quit').onclick=()=>{ if(G.mode==='online') netLeave(); toMenu(); };
 
@@ -1837,13 +1922,15 @@ function hostNetTick(){
     }
   }
   if(G.state==='aim'&&G.locked[0]&&!G.locked[1]){ $('#wait').textContent='Waiting for opponent…'; $('#wait').hidden=false; }
+  if(G.state==='pick'&&o&&o.presence&&typeof o.presence.pk==='string'&&!G.picked[1]){ // the guest's ball choice for the next round
+    const [key,k]=o.presence.pk.split('|'); if(key===`${G.mid}:${G.pickRound}`&&BALLS[k]){ G.types[1]=k; G.picked[1]=true; maybeStartAfterPick(); } }
   const now=performance.now(); if(now-NET.lastSend<(NET.backend==='firebase'?60:45)) return; NET.lastSend=now;
   NET.room.presence({role:'host',nick:myNick(),ball:picks[0],g:snapshot()}).catch(()=>{});
 }
 function snapshot(){
-  const st={aim:0,fight:1,roundEnd:2,over:3}[G.state]||0;
+  const st={aim:0,fight:1,roundEnd:2,over:3,pick:4}[G.state]||0;
   const s={m:G.mid,s:st,r:G.round,at:R0(G.aimT*10),h:G.hearts.slice(),ty:G.types.slice(),nm:G.names.slice(),lk:[G.locked?+G.locked[0]:0,G.locked?+G.locked[1]:0],
-    w:G.winner==null?-1:G.winner,ot:G.ot?1:0,dl:G.dealt.slice(),sk:R0(G.shake),fl:R0(flashSky*100),ar:encArena(G.arena),in:R0(G.inset||0),cs:G.cos.map(c=>[c.trail,c.aura]),
+    w:G.winner==null?-1:G.winner,pt:G.state==='pick'?R0(G.pickT*10):0,pr:G.pickRound||0,ot:G.ot?1:0,dl:G.dealt.slice(),sk:R0(G.shake),fl:R0(flashSky*100),ar:encArena(G.arena),in:R0(G.inset||0),cs:G.cos.map(c=>[c.trail,c.aura]),
     b:G.balls.map(b=>[R0(b.x),R0(b.y),R0(b.vx),R0(b.vy),R0(Math.max(0,b.hp)),(b.frozen>0?1:0)|(b.ghost>0?2:0)|(b.shield>0?4:0)|(b.dash>0?8:0)|(b.flash>0?16:0)|(b.dead?32:0)|(b.puff>0?64:0)|(b.ambush>0?128:0)|(b.boost>0?256:0)|(b.blown>0?512:0),R0(b.rot*10),R0(b.pulse*10),R0(b.r),b.stack||0,R0((b.sawA||0)*100)]),
     n:G.mins.map(z=>[R0(z.x),R0(z.y),R0(z.vx),R0(z.vy),{bee:0,slime:1,clone:2}[z.kind]||0,z.owner,z.flash>0?1:0]),
     p:G.shots.map(q=>[R0(q.x),R0(q.y),R0(q.vx),R0(q.vy),{ice:0,needle:1,boom:2,shuri:3}[q.kind]||0]),
@@ -1880,7 +1967,13 @@ function applySnap(g){
   const num=(v,d=0)=>typeof v==='number'&&isFinite(v)?v:d;
   const arr=v=>Array.isArray(v)?v:[];
   const prevState=G.state, prevRound=G.round;
-  G.state=['aim','fight','roundEnd','over'][num(g.s)]||'aim';
+  G.state=['aim','fight','roundEnd','over','pick'][num(g.s)]||'aim';
+  if(G.state!=='pick'&&Array.isArray(g.ty)&&BALLS[g.ty[0]]&&BALLS[g.ty[1]]&&(g.ty[0]!==G.types[0]||g.ty[1]!==G.types[1])){ G.types=[g.ty[0],g.ty[1]]; panelText(); }
+  if(G.state==='pick'&&G.guestPickRound!==num(g.pr)){ // the host started a ball pick: show ours
+    G.guestPickRound=num(g.pr); G.pickRound=num(g.pr); G.pickers=[1]; G.pickIdx=0; G.rerolled={}; G.picked=[true,false];
+    G.pickOpts={1:pickChoices(G.types[1])}; G.pickT=num(g.pt)/10; $('#lock').hidden=true; $('#wait').hidden=true; showPick(); }
+  if(G.state==='pick'){ G.pickT=num(g.pt)/10; if(curPicker()!=null) pickTimerText(); }
+  if(G.state!=='pick'&&prevState==='pick'){ $('#pickBox').hidden=true; }
   G.round=num(g.r,1); G.aimT=num(g.at)/10; G.hearts=arr(g.h).slice(0,2).map(v=>num(v,3)); G.dealt=arr(g.dl).slice(0,2).map(v=>num(v));
   G.shake=Math.max(G.shake,num(g.sk)); flashSky=Math.max(flashSky,num(g.fl)/100);
   G.inset=Math.min(150,Math.max(0,num(g.in)));
@@ -1906,6 +1999,9 @@ function applySnap(g){
   $('#pl0 .ready').hidden=!(G.state==='aim'&&lk[0]); $('#pl1 .ready').hidden=!(G.state==='aim'&&(lk[1]||G.myLocked));
   const bn=$('#banner');
   if(G.state==='aim'){ bn.textContent='ADJUST YOUR AIM – '+Math.max(0,Math.ceil(G.aimT)); bn.className=''; $('#lock').hidden=G.myLocked; $('#lock').textContent='Lock Aim'; $('#wait').hidden=!G.myLocked; $('#wait').textContent='Waiting for opponent…'; }
+  else if(G.state==='pick'){ bn.textContent='PICK YOUR BALL – '+Math.max(0,Math.ceil(G.pickT)); bn.className=''; $('#lock').hidden=true;
+    if(curPicker()==null){ $('#wait').textContent='Waiting for the host…'; $('#wait').hidden=false; }
+    if(G.pickT<=0&&curPicker()!=null) choosePick(1,G.types[1]); }
   else { const want=g.ot&&G.state==='fight'?'OVERTIME – NO HEALING':''; bn.textContent=want; bn.className=want?'p2':''; $('#lock').hidden=true; $('#wait').hidden=true; }
   if(G.state==='roundEnd'&&prevState==='fight'&&G.arena) questEvent('chaos');
   if(G.state==='over'&&!NET.shownOver){ NET.shownOver=true; musicStop(); G.winner=num(g.w,0); $('#center').textContent=''; showResult(1); }
@@ -1922,6 +2018,7 @@ function playEv(ev){
   else if(t==='c'){ const k=str(ev[2]); if(k==='fight'||k==='round') showCenter(k,num(ev[3]),1); }
 }
 function guestAimChanged(){ if(G.net!=='guest'||!NET.room) return; NET.room.presence({role:'guest',nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],a:R0(G.angles[1]*1000)}).catch(()=>{}); }
+function guestSendPick(k){ if(!NET.room) return; NET.room.presence({role:'guest',nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],pk:`${G.mid}:${G.pickRound}|${k}`}).catch(()=>{}); }
 function guestLock(){
   if(G.net!=='guest'||G.state!=='aim'||G.myLocked) return;
   G.myLocked=true; dragging=false; SFX.lock(); $('#lock').hidden=true; $('#wait').hidden=false; $('#pl1 .ready').hidden=false;
