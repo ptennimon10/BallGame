@@ -79,6 +79,10 @@ input::placeholder{color:#55648f}
 .card.sel1.sel2{border-color:var(--gold)}
 .card canvas{width:64px;height:64px}
 .card .nm{font-family:var(--display);font-size:1.1rem;letter-spacing:.02em}
+.card .rar{font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--rc);border:1.5px solid var(--rc);border-radius:999px;padding:0 .6em;line-height:1.5}
+.card .rar.cel{border:0;color:#1a1030;background:linear-gradient(90deg,#ff8ad8,#ffe36b,#7cf3ff,#b28bff,#ff8ad8);background-size:200% 100%;animation:celShift 3s linear infinite}
+@keyframes celShift{to{background-position:200% 0}}
+.card.secret{border-color:#6a5aa8;background:linear-gradient(160deg,rgba(255,216,74,.10),rgba(178,139,255,.10)) ,var(--panel)}
 .card .ab{font-size:.75rem;color:var(--muted);font-weight:700;line-height:1.3}
 .card .st{font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:2px;font-variant-numeric:tabular-nums}
 .card.locked canvas{filter:grayscale(.85) brightness(.6)}
@@ -161,6 +165,16 @@ input::placeholder{color:#55648f}
 .namebox .sub,.namebox .warn{text-align:center}
 #lbTabs button{font-size:.85rem;padding:.3em .7em}
 .credit{font-size:.8rem;color:var(--muted);font-weight:700;text-align:center;line-height:1.5}
+.btn-red{background:#e2384f;box-shadow:0 5px 0 #8a1426;color:#fff}
+.wheelbox{align-items:center;text-align:center}
+.wheelwrap{position:relative;width:min(280px,70vw);aspect-ratio:1;margin:6px auto}
+.wheelwrap canvas{width:100%;height:100%}
+.wpointer{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid #fff;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.wres{min-height:1.6em;font-family:var(--display);font-size:1.25rem;color:var(--gold)}
+.odds{width:100%;text-align:left;font-size:.8rem;color:var(--muted);font-weight:700}
+.odds summary{cursor:pointer;color:var(--fg)}
+.odds ul{margin:.4em 0;padding-left:1.2em;columns:2}
+#codeInput{width:100%;box-sizing:border-box;font:inherit;font-weight:800;font-size:1.1rem;text-transform:uppercase;letter-spacing:.08em;padding:.55em .8em;border-radius:12px;border:2px solid var(--line);background:var(--frame);color:var(--fg);text-align:center}
 .linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--fg);text-decoration:underline;cursor:pointer}
 .credit b{font-family:var(--display);font-weight:400;color:var(--fg);font-size:1rem;letter-spacing:.02em}
 
@@ -263,6 +277,7 @@ input::placeholder{color:#55648f}
       </div>
       <div class="grp">
         <button class="pill mute" id="howBtn" type="button">How to play</button>
+        <button class="pill mute" id="codeBtn" type="button">Code</button>
         <button class="pill mute" id="musicBtn" type="button" aria-pressed="true">Music: on</button>
         <button class="pill mute" id="mute" type="button" aria-pressed="false">Sound: on</button>
       </div>
@@ -334,6 +349,7 @@ input::placeholder{color:#55648f}
     <div class="panel" id="daily">
       <div class="panel-h"><h2>Daily</h2><span class="sub" id="streak"></span></div>
       <div class="drow"><div><div style="font-weight:800">Daily reward</div><div class="sub" id="dailySub"></div></div><button class="btn btn-gold tiny" id="claimDaily" type="button">Claim <span id="dailyAmt"></span></button></div>
+      <div class="drow"><div><div style="font-weight:800">Spin the wheel</div><div class="sub" id="spinSub"></div></div><button class="btn btn-gold tiny" id="openWheel" type="button">Spin</button></div>
       <div id="quests" style="display:flex;flex-direction:column;gap:6px"></div>
     </div>
 
@@ -422,6 +438,32 @@ input::placeholder{color:#55648f}
       <div class="row"><button class="btn btn-go" id="buyYes" type="button">Unlock</button><button class="btn btn-ghost" id="buyNo" type="button">Cancel</button></div>
     </div>
   </div>
+  <div class="modal" id="wheelBox" hidden role="dialog" aria-modal="true" aria-labelledby="wheelH">
+    <div class="mbox wheelbox">
+      <h2 id="wheelH">Spin the wheel</h2>
+      <div class="sub" id="wheelLeft"></div>
+      <div class="wheelwrap"><canvas id="wheelCv" width="560" height="560" aria-hidden="true"></canvas><div class="wpointer"></div></div>
+      <div class="wres" id="wheelRes" aria-live="polite"></div>
+      <div class="row"><button class="btn btn-go" id="spinGo" type="button">Spin!</button><button class="btn btn-ghost" id="wheelClose" type="button">Close</button></div>
+      <details class="odds"><summary>Odds</summary><ul id="wheelOdds"></ul><p class="note">You always get something you don't own yet when possible. If you already own everything in that slice, you get coins instead.</p></details>
+    </div>
+  </div>
+  <div class="modal" id="codeBox" hidden role="dialog" aria-modal="true" aria-labelledby="codeH">
+    <div class="mbox">
+      <h2 id="codeH">Secret code</h2>
+      <p class="note">Got a secret code? Enter it here to unlock something special.</p>
+      <input type="text" id="codeInput" maxlength="24" autocomplete="off" spellcheck="false" placeholder="Enter code" aria-label="Secret code">
+      <div class="sub" id="codeMsg"></div>
+      <div class="row"><button class="btn btn-go" id="codeGo" type="button">Redeem</button><button class="btn btn-ghost" id="codeClose" type="button">Close</button></div>
+    </div>
+  </div>
+  <div class="modal" id="resetBox" hidden role="dialog" aria-modal="true" aria-labelledby="resetH">
+    <div class="mbox">
+      <h2 id="resetH">Reset all progress?</h2>
+      <p class="note">This deletes your coins, balls, trails, auras, trophies, wins, play time, quests, daily streak, wheel spins and boss level, and removes you from the leaderboard. Your name and sound settings stay. <b>This can't be undone.</b></p>
+      <div class="row"><button class="btn btn-ghost" id="resetNo" type="button">Cancel</button><button class="btn btn-red" id="resetYes" type="button">Yes, reset everything</button></div>
+    </div>
+  </div>
   <div class="modal" id="privBox" hidden role="dialog" aria-modal="true" aria-labelledby="privH">
     <div class="mbox">
       <h2 id="privH">Privacy &amp; Terms</h2>
@@ -444,7 +486,8 @@ input::placeholder{color:#55648f}
         <li><span><b>Switch balls between rounds.</b> Before each new round, pick from 3 balls: the one you just used and 2 others you own. Don't like the choices? You get 1 reroll per round for 5 coins, which swaps in 3 random balls you own.</span></li>
       </ol>
       <p class="note">Balls speed up the longer a round goes. After 45 seconds it's overtime: both balls lose HP and nobody can heal. When both sides are down to their last life, it's sudden death.</p>
-      <p class="note">Wins earn coins for new balls, trails and auras. Once you own both 150-coin balls, match rewards drop to 70%, so save up. Daily rewards and quests always pay in full.</p>
+      <p class="note">Every win pays 50 coins in any mode. Losses pay a few coins too. Balls come in four rarities: Rare (150), Epic (300), Mythic (450) and Legendary (650). Spend coins on balls, trails and auras. Daily rewards and quests pay extra.</p>
+      <p class="note">Spin the wheel twice every 24 hours for a free ball, trail or aura. Rarer prizes are harder to land. One Celestial ball can't be bought or won at all. It needs a secret code.</p>
       <dl class="modes">
         <dt>vs Bot</dt><dd>One on one against a computer player.</dd>
         <dt>2v2</dt><dd>You and a bot teammate against two bots.</dd>
@@ -500,25 +543,31 @@ const BALLS={
   storm:{name:'Storm Ball',light:'#efe3ff',color:'#9b6bff',dark:'#4b23b0',touch:7,price:0,ability:'Every time it hits the enemy, lightning strikes it too.',stat:'Hit 7 · Zap 9 on hit'},
   ghost:{name:'Ghost Ball',light:'#ffffff',color:'#d6def5',dark:'#7f8bb3',touch:11,price:150,ability:'Heals from every hit it lands. Phases out to dodge.',stat:'Hit 11 · Heal 5'},
   bomb:{name:'Bomb Ball',light:'#8a8fa8',color:'#3b3e52',dark:'#15161f',touch:6,price:150,ability:'Throws bombs at the enemy that explode after a short fuse.',stat:'Hit 6 · Blast 10'},
-  cactus:{name:'Cactus Ball',light:'#c8f59a',color:'#4fbf3f',dark:'#1f6b1c',touch:8,price:200,ability:'Sprays needles everywhere. Hurts anything that hits it.',stat:'Hit 8 · Needle 4'},
-  slime:{name:'Slime Ball',light:'#c9fff4',color:'#2fd6be',dark:'#0d7f72',touch:8,price:200,ability:'Splits off mini slimes when hit, and every few seconds.',stat:'Hit 8 · Mini 5'},
-  magnet:{name:'Magnet Ball',light:'#ffb3bd',color:'#e8384f',dark:'#8a1426',touch:12,price:250,ability:'Pulls the enemy toward it, then slams into it.',stat:'Hit 12 · Pull'},
-  shield:{name:'Shield Ball',light:'#d6e4ff',color:'#5b8def',dark:'#23439c',touch:8,price:250,ability:'Grows a shield that blocks a hit and bounces damage back.',stat:'Hit 8 · Reflect 6'},
+  cactus:{name:'Cactus Ball',light:'#c8f59a',color:'#4fbf3f',dark:'#1f6b1c',touch:8,price:150,ability:'Sprays needles everywhere. Hurts anything that hits it.',stat:'Hit 8 · Needle 4'},
+  slime:{name:'Slime Ball',light:'#c9fff4',color:'#2fd6be',dark:'#0d7f72',touch:8,price:150,ability:'Splits off mini slimes when hit, and every few seconds.',stat:'Hit 8 · Mini 5'},
+  magnet:{name:'Magnet Ball',light:'#ffb3bd',color:'#e8384f',dark:'#8a1426',touch:12,price:300,ability:'Pulls the enemy toward it, then slams into it.',stat:'Hit 12 · Pull'},
+  shield:{name:'Shield Ball',light:'#d6e4ff',color:'#5b8def',dark:'#23439c',touch:8,price:300,ability:'Grows a shield that blocks a hit and bounces damage back.',stat:'Hit 8 · Reflect 6'},
   laser:{name:'Laser Ball',light:'#ffd1f6',color:'#ff2fd0',dark:'#8a0f70',touch:7,price:300,ability:'Locks on, then fires a laser across the whole arena.',stat:'Hit 7 · Laser 13'},
   rocket:{name:'Rocket Ball',light:'#ffffff',color:'#e9edf5',dark:'#9aa3b8',touch:7,price:300,ability:'Blasts toward the enemy at high speed for a big hit.',stat:'Hit 7 · Ram 20'},
-  hole:{name:'Black Hole Ball',light:'#c99bff',color:'#3a1670',dark:'#0b0418',touch:7,price:450,ability:'Opens black holes in the enemy\'s path that suck it in and crush it.',stat:'Hit 7 · Crush 4'},
-  mirror:{name:'Mirror Ball',light:'#ffffff',color:'#c9d3e6',dark:'#5d6a86',touch:7,price:350,ability:'Makes copies of itself that bounce around and ram the enemy.',stat:'Hit 7 · Copy 7'},
+  hole:{name:'Black Hole Ball',light:'#c99bff',color:'#3a1670',dark:'#0b0418',touch:7,price:650,ability:'Opens black holes in the enemy\'s path that suck it in and crush it.',stat:'Hit 7 · Crush 4'},
+  mirror:{name:'Mirror Ball',light:'#ffffff',color:'#c9d3e6',dark:'#5d6a86',touch:7,price:450,ability:'Makes copies of itself that bounce around and ram the enemy.',stat:'Hit 7 · Copy 7'},
   boomer:{name:'Boomerang Ball',light:'#f3c98b',color:'#b8742c',dark:'#5c3511',touch:7,price:300,ability:'Throws boomerangs that can hit on the way out and on the way back.',stat:'Hit 7 · Boomerang 9'},
-  clock:{name:'Rewind Ball',light:'#fff3c2',color:'#e8b93a',dark:'#8a5a00',touch:11,price:400,ability:'Turns back time: jumps to where it was and gets its lost HP back.',stat:'Hit 11 · Rewind 2.5s'},
-  puffer:{name:'Puffer Ball',light:'#ffe0ec',color:'#ff8fb8',dark:'#b23c6a',touch:7,price:350,ability:'Puffs up huge and spiky when hit, taking half damage.',stat:'Hit 7 · Puffed 15'},
-  warp:{name:'Warp Ball',light:'#e6feff',color:'#22c7ff',dark:'#0a2a7a',touch:7,price:400,ability:'Teleports right in front of the enemy for a surprise hit.',stat:'Hit 7 · Ambush 17'},
-  rubber:{name:'Rubber Ball',light:'#ffd0d0',color:'#ff4d6d',dark:'#9b1230',touch:6,price:300,ability:'Gets faster and hits harder every time it bounces off a wall.',stat:'Hit 6 · +4 per bounce'},
-  ninja:{name:'Ninja Ball',light:'#7a7f95',color:'#262a3a',dark:'#07080d',touch:7,price:350,ability:'Throws shurikens that ricochet off the walls.',stat:'Hit 7 · Shuriken 5'},
-  wind:{name:'Wind Ball',light:'#f0fffb',color:'#9be8d8',dark:'#2f8f80',touch:9,price:400,ability:'Blasts the enemy away with gusts. Slamming into a wall hurts.',stat:'Hit 9 · Slam 11'},
-  saw:{name:'Saw Ball',light:'#f2f4f7',color:'#a9b1c0',dark:'#4b5263',touch:8,price:450,ability:'Three spinning saw blades circle it and cut anything they touch.',stat:'Hit 8 · Blade 6'},
-  tesla:{name:'Tesla Ball',light:'#d9f3ff',color:'#2f6bff',dark:'#0b1c5c',touch:7,price:500,ability:'Zaps any enemy that comes close with electric arcs.',stat:'Hit 7 · Arc 4'},
+  clock:{name:'Rewind Ball',light:'#fff3c2',color:'#e8b93a',dark:'#8a5a00',touch:11,price:450,ability:'Turns back time: jumps to where it was and gets its lost HP back.',stat:'Hit 11 · Rewind 2.5s'},
+  puffer:{name:'Puffer Ball',light:'#ffe0ec',color:'#ff8fb8',dark:'#b23c6a',touch:7,price:450,ability:'Puffs up huge and spiky when hit, taking half damage.',stat:'Hit 7 · Puffed 15'},
+  warp:{name:'Warp Ball',light:'#e6feff',color:'#22c7ff',dark:'#0a2a7a',touch:7,price:450,ability:'Teleports right in front of the enemy for a surprise hit.',stat:'Hit 7 · Ambush 17'},
+  rubber:{name:'Rubber Ball',light:'#ffd0d0',color:'#ff4d6d',dark:'#9b1230',touch:6,price:150,ability:'Gets faster and hits harder every time it bounces off a wall.',stat:'Hit 6 · +4 per bounce'},
+  ninja:{name:'Ninja Ball',light:'#7a7f95',color:'#262a3a',dark:'#07080d',touch:7,price:300,ability:'Throws shurikens that ricochet off the walls.',stat:'Hit 7 · Shuriken 5'},
+  wind:{name:'Wind Ball',light:'#f0fffb',color:'#9be8d8',dark:'#2f8f80',touch:9,price:450,ability:'Blasts the enemy away with gusts. Slamming into a wall hurts.',stat:'Hit 9 · Slam 11'},
+  saw:{name:'Saw Ball',light:'#f2f4f7',color:'#a9b1c0',dark:'#4b5263',touch:8,price:650,ability:'Three spinning saw blades circle it and cut anything they touch.',stat:'Hit 8 · Blade 6'},
+  nova:{name:'Nova Ball',light:'#fffdf0',color:'#ffd84a',dark:'#ff5e3a',touch:20,price:0,secret:true,ability:'Secret ball. Has 25 extra HP, and every hit takes off a fifth of the enemy\'s max HP.',stat:'HP +25 · 5 hits to pop'},
+  tesla:{name:'Tesla Ball',light:'#d9f3ff',color:'#2f6bff',dark:'#0b1c5c',touch:7,price:650,ability:'Zaps any enemy that comes close with electric arcs.',stat:'Hit 7 · Arc 4'},
 };
-const KEYS=Object.keys(BALLS);
+/* Rarity tiers: stronger and flashier balls cost more. Every win pays 50 coins, so
+   Rare = 3 wins, Epic = 6, Mythic = 9, Legendary = 13. */
+const RARITY={rare:{label:'Rare',price:150,col:'#5fd3ff'},epic:{label:'Epic',price:300,col:'#c77dff'},mythic:{label:'Mythic',price:450,col:'#ff7ab8'},legend:{label:'Legendary',price:650,col:'#ffc83a'},celestial:{label:'Celestial',price:0,col:'#fff'}};
+const TIER_OF=k=>BALLS[k].secret?'celestial':BALLS[k].price<=0?null:BALLS[k].price>=650?'legend':BALLS[k].price>=450?'mythic':BALLS[k].price>=300?'epic':'rare';
+const KEYS=Object.keys(BALLS).filter(k=>!BALLS[k].secret); // the secret ball is never sold, won, or used by bots
+const SECRET='nova';
 const CD={blaze:.09,frost:2.3,hive:2.4,storm:99,ghost:5.5,bomb:2.5,cactus:2.8,slime:2.6,magnet:3.2,shield:4.2,laser:3,rocket:2.6,hole:4.6,mirror:2.8,boomer:1.9,clock:6,puffer:99,warp:3.3,rubber:99,ninja:2.9,wind:2.6,saw:99,tesla:.9};
 const BOTS=['Rex','Juno','Pickle','Turbo','Nova','Waffles','Biscuit','Zippy','Mochi','Blitz','Pebble','Comet'];
 const DIFF={easy:{hp:80,aim:1.2,mult:.6,label:'Easy'},normal:{hp:100,aim:.6,mult:1,label:'Normal'},hard:{hp:125,aim:.15,mult:1.6,label:'Hard'}};
@@ -531,8 +580,8 @@ const MODES={
   pvp:{label:'2 Players',note:'Two people on one screen. Each picks a ball and takes a turn to aim.'},
   online:{label:'Online',note:'Play people online. Online wins earn trophies for the leaderboard.'},
 };
-const TRAILS={none:{name:'None',price:0},sparkle:{name:'Sparkles',price:100},smoke:{name:'Smoke',price:100},bubbles:{name:'Bubbles',price:150},fire:{name:'Fire',price:150},stars:{name:'Stars',price:200},rainbow:{name:'Rainbow',price:250}};
-const AURAS={none:{name:'None',price:0},gold:{name:'Gold Ring',price:150},frost:{name:'Ice Crown',price:200},neon:{name:'Neon',price:250},rainbow:{name:'Rainbow Halo',price:300}};
+const TRAILS={none:{name:'None',price:0},sparkle:{name:'Sparkles',price:150},smoke:{name:'Smoke',price:150},bubbles:{name:'Bubbles',price:250},fire:{name:'Fire',price:250},stars:{name:'Stars',price:350},rainbow:{name:'Rainbow',price:500}};
+const AURAS={none:{name:'None',price:0},gold:{name:'Gold Ring',price:200},frost:{name:'Ice Crown',price:300},neon:{name:'Neon',price:400},rainbow:{name:'Rainbow Halo',price:600}};
 const QUESTS={
   win2:{t:'Win 2 matches',goal:2,coins:60,ev:'win'},
   play5:{t:'Play 5 matches',goal:5,coins:50,ev:'play'},
@@ -738,6 +787,15 @@ function drawBall(c,type,x,y,r,o={}){
     case 'saw':
       c.fillStyle='rgba(60,66,80,.55)'; c.beginPath(); c.arc(0,0,r*.22,0,TAU); c.fill();
       c.strokeStyle='rgba(255,255,255,.6)'; c.lineWidth=r*.06; c.beginPath(); c.arc(0,0,r*.55,0,TAU); c.stroke(); break;
+    case 'nova': {
+      c.save(); c.rotate(rot*.6);
+      for(let L=0;L<2;L++){ const n=8, R=r*(L?.62:.9), q=r*(L?.2:.3); c.beginPath();
+        for(let i=0;i<n*2;i++){ const a=i/(n*2)*TAU+(L?TAU/16:0), rr=i%2?q:R; i?c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr); }
+        c.closePath(); c.fillStyle=L?'rgba(255,255,255,.95)':'rgba(255,246,200,.55)'; c.fill(); }
+      c.restore();
+      c.beginPath(); c.arc(0,0,r*.2,0,TAU); c.fillStyle='#fff'; c.shadowColor='#fff'; c.shadowBlur=r*.4; c.fill(); c.shadowBlur=0;
+      for(let i=0;i<4;i++){ const a=t*1.7+i*TAU/4, d=r*(.62+.08*Math.sin(t*5+i)); c.beginPath(); c.arc(Math.cos(a)*d,Math.sin(a)*d,r*.06,0,TAU); c.fillStyle=['#7cf3ff','#ff8ad8','#b28bff','#fff'][i]; c.fill(); }
+      break; }
     case 'tesla':
       c.strokeStyle='#ffd86b'; c.lineWidth=r*.09; c.beginPath(); for(let i=0;i<6;i++){ const yy=-r*.5+i*r*.2; c.moveTo(-r*.28,yy); c.lineTo(r*.28,yy+r*.1); } c.stroke();
       c.strokeStyle=`rgba(180,230,255,${.5+.5*Math.sin(t*25)})`; c.lineWidth=r*.05; c.beginPath(); c.moveTo(-r*.7,-r*.2); c.lineTo(-r*.45,0); c.lineTo(-r*.7,r*.2); c.moveTo(r*.7,-r*.2); c.lineTo(r*.45,0); c.lineTo(r*.7,r*.2); c.stroke(); break;
@@ -751,6 +809,8 @@ function drawBall(c,type,x,y,r,o={}){
     c.strokeStyle='#c9a46a'; c.lineWidth=Math.max(1.5,r*.07); c.beginPath(); c.moveTo(0,-r*1.08); c.quadraticCurveTo(r*.25,-r*1.35,r*.35,-r*1.22); c.stroke();
     c.fillStyle=Math.sin(t*30)>0?'#ffd23f':'#ff5a2a'; c.beginPath(); c.arc(r*.37,-r*1.22,r*.1+Math.random()*r*.05,0,TAU); c.fill();
   }
+  if(type==='nova'){ c.save(); c.rotate(-t*.8); c.lineWidth=Math.max(1.5,r*.07); const cols=['#ff8ad8','#ffe36b','#7cf3ff','#b28bff'];
+    for(let i=0;i<4;i++){ c.strokeStyle=cols[i]; c.beginPath(); c.arc(0,0,r*1.12,i*TAU/4+.15,(i+1)*TAU/4-.15); c.stroke(); } c.restore(); }
   if(type==='puffer'){ const big=o.puff>0, n=big?16:10, L=big?r*.32:r*.12; c.fillStyle=big?'#ffd1e3':'#e07aa3';
     for(let i=0;i<n;i++){ const a=i/n*TAU+(o.rot||0)*.3; c.beginPath(); c.moveTo(Math.cos(a-.12)*r*.97,Math.sin(a-.12)*r*.97); c.lineTo(Math.cos(a)*(r+L),Math.sin(a)*(r+L)); c.lineTo(Math.cos(a+.12)*r*.97,Math.sin(a+.12)*r*.97); c.closePath(); c.fill(); } }
   if(type==='saw'){ c.fillStyle='#d7dce6'; const n=14; c.save(); c.rotate((o.rot||0)*2); for(let i=0;i<n;i++){ const a=i/n*TAU; c.beginPath(); c.moveTo(Math.cos(a)*r*.96,Math.sin(a)*r*.96); c.lineTo(Math.cos(a+.16)*(r+r*.16),Math.sin(a+.16)*(r+r*.16)); c.lineTo(Math.cos(a+.3)*r*.96,Math.sin(a+.3)*r*.96); c.closePath(); c.fill(); } c.restore(); }
@@ -804,9 +864,9 @@ function drawAura(c,kind,x,y,r,t){
 
 /* ---------- menu ---------- */
 const grid=$('#grid');
-KEYS.forEach(k=>{
-  const b=document.createElement('button'); b.type='button'; b.className='card'; b.dataset.k=k;
-  b.innerHTML=`<span class="tagme t1" hidden>P1</span><span class="tagme t2" hidden>P2</span><canvas width="128" height="128"></canvas><div class="nm">${BALLS[k].name}</div><div class="ab">${BALLS[k].ability}</div><div class="st">${BALLS[k].stat}</div><div class="buy" hidden><span class="coin"></span><span class="bp"></span></div>`;
+KEYS.slice().sort((a,b)=>BALLS[a].price-BALLS[b].price).concat([SECRET]).forEach(k=>{
+  const b=document.createElement('button'); b.type='button'; b.className='card'+(BALLS[k].secret?' secret':''); b.dataset.k=k;
+  b.innerHTML=`<span class="tagme t1" hidden>P1</span><span class="tagme t2" hidden>P2</span><canvas width="128" height="128"></canvas><div class="nm">${BALLS[k].name}</div>${TIER_OF(k)?`<div class="rar${BALLS[k].secret?' cel':''}" style="--rc:${RARITY[TIER_OF(k)].col}">${RARITY[TIER_OF(k)].label}</div>`:''}<div class="ab">${BALLS[k].ability}</div><div class="st">${BALLS[k].stat}</div><div class="buy" hidden><span class="coin"></span><span class="bp"></span></div>`;
   b.onclick=()=>{ ac(); clickCard(k,b); };
   grid.appendChild(b);
 });
@@ -814,6 +874,7 @@ let toastT=0;
 function toast(s,secs=2.5){ const t=$('#toast'); t.textContent=s; t.hidden=false; toastT=secs; }
 function shakeEl(el){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
 function clickCard(k,el){
+  if(!owned.includes(k)&&BALLS[k].secret){ openCode(); SFX.click(); return; }
   if(!owned.includes(k)){
     const p=BALLS[k].price;
     if(coins>=p){ openBuy(k); SFX.click(); }
@@ -840,6 +901,7 @@ $('#buyYes').onclick=()=>{
   if(owned.includes(k)||coins<p){ closeBuy(); return; }
   coins-=p; owned.push(k); picks[who]=k; save(); closeBuy(); renderMenu(); toast(`Unlocked ${BALLS[k].name}!`); SFX.win(); netLobbyPresence();
 };
+const WIN_COINS=50; // coins for winning a match in any mode, any difficulty, any boss level
 const econMult=()=>['ghost','bomb'].every(k=>owned.includes(k))?.7:1;
 function playLabel(){
   const d=DIFF[diff].label;
@@ -862,11 +924,11 @@ function renderMenu(){
     b.classList.toggle('sel2',mode==='pvp'&&picks[1]===k);
     b.querySelector('.t1').hidden=!(mode==='pvp'&&picks[0]===k);
     b.querySelector('.t2').hidden=!(mode==='pvp'&&picks[1]===k);
-    const buy=b.querySelector('.buy'); buy.hidden=own; buy.classList.toggle('cant',coins<BALLS[k].price);
-    b.querySelector('.bp').textContent='Unlock '+BALLS[k].price;
-    b.setAttribute('aria-label',BALLS[k].name+(own?'':`, locked, costs ${BALLS[k].price} coins`));
+    const buy=b.querySelector('.buy'), sec=!!BALLS[k].secret; buy.hidden=own; buy.classList.toggle('cant',!sec&&coins<BALLS[k].price); buy.querySelector('.coin').hidden=sec;
+    b.querySelector('.bp').textContent=sec?'Enter secret code':'Unlock '+BALLS[k].price;
+    b.setAttribute('aria-label',BALLS[k].name+(own?'':sec?', locked, needs a secret code':`, locked, costs ${BALLS[k].price} coins`));
   });
-  $('#record').textContent=`Wins: vs Bot ${record.w} · 2v2 ${record.dw} · Royale ${record.rw} · Boss level ${bossLevel} · Online ${record.ow}–${record.ol} · ${owned.length}/${KEYS.length} balls unlocked`;
+  $('#record').textContent=`Wins: vs Bot ${record.w} · 2v2 ${record.dw} · Royale ${record.rw} · Boss level ${bossLevel} · Online ${record.ow}–${record.ol} · ${owned.filter(k=>KEYS.includes(k)).length}/${KEYS.length} balls unlocked`;
   $('#myStats').textContent=`You: ${trophies} trophies · ${stats.wins} win${stats.wins===1?'':'s'} · ${fmtTime(stats.play)} played`;
   renderDaily(); renderStyle(); renderNet();
 }
@@ -882,9 +944,98 @@ setMute();
   l1.append('Created by ',b); b.textContent=GAME_INFO.developer;
   l2.textContent=`© ${GAME_INFO.year} ${GAME_INFO.developer}. All rights reserved.`;
   const l3=document.createElement('div'), pb=document.createElement('button'); pb.type='button'; pb.id='privBtn'; pb.className='linkbtn'; pb.textContent='Privacy & Terms';
-  l3.append('By playing you agree to the ',pb,'.'); el.append(l1,l2,l3); })();
+  l3.append('By playing you agree to the ',pb,'.');
+  const l4=document.createElement('div'), rb=document.createElement('button'); rb.type='button'; rb.id='resetBtn'; rb.className='linkbtn'; rb.textContent='Reset progress'; l4.append(rb);
+  el.append(l1,l2,l3,l4); })();
 $('#privOwner').textContent=GAME_INFO.developer;
 if(CG){ $('#privSave').textContent='to your CrazyGames account'; $('#privStats').hidden=true; }
+/* ---------- secret code ---------- */
+// The code itself is not stored in the game, only a fingerprint of it, so it can't be read from the page source.
+const CODE_HASHES={'1vc2g7qz8rn':'nova'};
+function codeHash(str,seed=7){ let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed; for(let i=0;i<str.length;i++){ const ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909); h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909); return (4294967296*(2097151&h2)+(h1>>>0)).toString(36); }
+function openCode(){ $('#codeBox').hidden=false; $('#codeMsg').textContent=''; $('#codeInput').value=''; setTimeout(()=>$('#codeInput').focus(),30); }
+function redeemCode(){
+  const raw=$('#codeInput').value.toUpperCase().replace(/[^A-Z0-9]/g,''); const k=raw&&CODE_HASHES[codeHash(raw)];
+  if(!k){ $('#codeMsg').textContent="That code doesn't work."; shakeEl($('#codeInput')); SFX.nope(); return; }
+  if(owned.includes(k)){ $('#codeMsg').textContent=`You already own ${BALLS[k].name}.`; return; }
+  owned.push(k); picks[0]=k; save(); SFX.win(); $('#codeBox').hidden=true; toast(`Secret unlocked: ${BALLS[k].name}!`,3.5); renderMenu();
+}
+$('#codeBtn').onclick=()=>{ ac(); openCode(); }; $('#codeGo').onclick=redeemCode; $('#codeClose').onclick=()=>{ $('#codeBox').hidden=true; };
+$('#codeInput').addEventListener('keydown',e=>{ if(e.key==='Enter') redeemCode(); });
+$('#codeBox').addEventListener('click',e=>{ if(e.target.id==='codeBox') $('#codeBox').hidden=true; });
+
+/* ---------- reset progress ---------- */
+$('#resetBtn').onclick=()=>{ $('#resetBox').hidden=false; setTimeout(()=>$('#resetNo').focus(),30); };
+$('#resetNo').onclick=()=>{ $('#resetBox').hidden=true; };
+$('#resetBox').addEventListener('click',e=>{ if(e.target.id==='resetBox') $('#resetBox').hidden=true; });
+$('#resetYes').onclick=()=>{
+  try{ if(NET.backend==='firebase'&&NET.db) NET.db.ref('leaders/'+pid).remove().catch(()=>{}); }catch(e){}
+  coins=0; owned=KEYS.filter(k=>BALLS[k].price===0); picks=['blaze','frost']; record={w:0,l:0,ow:0,ol:0,dw:0,rw:0}; trophies=0; bossLevel=1; bossTries={};
+  cos={trails:['none'],auras:['none'],trail:'none',aura:'none'}; stats.wins=0; stats.play=0; save();
+  for(const k of ['bb_daily','bb_spins','bb_stats']){ try{ if(SAVE&&SAVE.removeItem) SAVE.removeItem(k); else localStorage.removeItem(k); }catch(e){} }
+  setTimeout(()=>location.reload(),150);
+};
+
+/* ---------- spin the wheel: 2 free spins every 24 hours ---------- */
+const SPIN_LIMIT=2, SPIN_WINDOW=24*3600*1000;
+const tierBalls=t=>KEYS.filter(k=>TIER_OF(k)===t);
+const WHEEL=[ // w = chance out of 100; rarer prizes get thinner slices
+  {label:'Rare Ball',w:24,kind:'ball',col:'#2f9fd6',items:()=>tierBalls('rare')},
+  {label:'Trail',w:22,kind:'trail',col:'#3aa45a',items:()=>Object.keys(TRAILS).filter(k=>TRAILS[k].price>0&&TRAILS[k].price<=250)},
+  {label:'Epic Ball',w:12,kind:'ball',col:'#8a4fd0',items:()=>tierBalls('epic')},
+  {label:'Aura',w:18,kind:'aura',col:'#d9862b',items:()=>Object.keys(AURAS).filter(k=>AURAS[k].price>0&&AURAS[k].price<=300)},
+  {label:'Mythic Ball',w:6,kind:'ball',col:'#d04f8f',items:()=>tierBalls('mythic')},
+  {label:'Rare Trail',w:8,kind:'trail',col:'#1f8f7a',items:()=>Object.keys(TRAILS).filter(k=>TRAILS[k].price>=350)},
+  {label:'LEGENDARY',w:3,kind:'ball',col:'#e0a400',items:()=>tierBalls('legend')},
+  {label:'Rare Aura',w:7,kind:'aura',col:'#c4532f',items:()=>Object.keys(AURAS).filter(k=>AURAS[k].price>=400)}];
+const WTOT=WHEEL.reduce((a,x)=>a+x.w,0);
+let spins=(store.get('bb_spins',[])||[]).filter(n=>typeof n==='number');
+function spinsLeft(){ const now=Date.now(); spins=spins.filter(n=>now-n<SPIN_WINDOW&&n<=now+6e4); return Math.max(0,SPIN_LIMIT-spins.length); }
+function nextSpinIn(){ if(spinsLeft()>0) return 0; return Math.max(0,Math.min(...spins)+SPIN_WINDOW-Date.now()); }
+function fmtWait(ms){ const m=Math.ceil(ms/60000), h=Math.floor(m/60); return h?`${h}h ${m%60}m`:`${m}m`; }
+function renderSpin(){ const n=spinsLeft(); $('#spinSub').textContent=n?`${n} free spin${n>1?'s':''} ready`:`Next spin in ${fmtWait(nextSpinIn())}`; $('#openWheel').textContent=n?'Spin':'View';
+  if(!$('#wheelBox').hidden&&!WH.spinning){ $('#wheelLeft').textContent=n?`${n} of ${SPIN_LIMIT} spins left today`:`Out of spins. Next one in ${fmtWait(nextSpinIn())}.`; $('#spinGo').disabled=!n; } }
+const WH={ang:0,spinning:false};
+function drawWheel(){
+  const cv=$('#wheelCv'), c=cv.getContext('2d'), S=cv.width, R=S/2-8; c.clearRect(0,0,S,S); c.save(); c.translate(S/2,S/2); c.rotate(WH.ang);
+  let a0=-Math.PI/2;
+  for(const sl of WHEEL){ const a1=a0+sl.w/WTOT*TAU; c.beginPath(); c.moveTo(0,0); c.arc(0,0,R,a0,a1); c.closePath(); c.fillStyle=sl.col; c.fill(); c.strokeStyle='rgba(255,255,255,.7)'; c.lineWidth=3; c.stroke();
+    const mid=(a0+a1)/2, fs=Math.max(15,Math.min(30,(a1-a0)*R*.32)); const wa=((mid+WH.ang)%TAU+TAU)%TAU, flip=wa>Math.PI/2&&wa<Math.PI*1.5; c.save(); c.rotate(mid); c.translate(R*.6,0); if(flip) c.rotate(Math.PI); c.fillStyle='#fff'; c.font=`800 ${fs}px Nunito, system-ui, sans-serif`; c.textAlign='center'; c.textBaseline='middle';
+    c.shadowColor='rgba(0,0,0,.5)'; c.shadowBlur=4; c.fillText(sl.label,0,0); c.restore(); a0=a1; }
+  c.beginPath(); c.arc(0,0,R,0,TAU); c.lineWidth=10; c.strokeStyle='#ffd23f'; c.stroke();
+  c.beginPath(); c.arc(0,0,R*.13,0,TAU); c.fillStyle='#1a2350'; c.fill(); c.lineWidth=6; c.strokeStyle='#ffd23f'; c.stroke(); c.restore();
+}
+function openWheel(){ $('#wheelBox').hidden=false; $('#wheelRes').textContent=''; drawWheel(); renderSpin();
+  $('#wheelOdds').innerHTML=''; for(const sl of WHEEL){ const li=document.createElement('li'); li.textContent=`${sl.label}: ${sl.w}%`; $('#wheelOdds').append(li); } }
+function closeWheel(){ if(WH.spinning) return; $('#wheelBox').hidden=true; }
+$('#openWheel').onclick=()=>{ ac(); openWheel(); }; $('#wheelClose').onclick=closeWheel;
+$('#wheelBox').addEventListener('click',e=>{ if(e.target.id==='wheelBox') closeWheel(); });
+function awardSlice(sl){
+  const all=sl.items(), list=sl.kind==='ball'?owned:sl.kind==='trail'?cos.trails:cos.auras, need=all.filter(k=>!list.includes(k));
+  if(!need.length){ const D=sl.kind==='ball'?BALLS:sl.kind==='trail'?TRAILS:AURAS; const avg=all.reduce((a,k)=>a+D[k].price,0)/Math.max(1,all.length); const amt=Math.max(25,Math.round(avg/3/5)*5); coins+=amt; save(); return `You own all of these, so here's +${amt} coins!`; }
+  const k=pick(need); list.push(k); save();
+  if(sl.kind==='ball'){ return `You won ${BALLS[k].name}! (${RARITY[TIER_OF(k)].label})`; }
+  return `You won the ${(sl.kind==='trail'?TRAILS:AURAS)[k].name} ${sl.kind}!`;
+}
+$('#spinGo').onclick=()=>{
+  if(WH.spinning||spinsLeft()<=0) return; ac();
+  let r=Math.random()*WTOT, idx=0; for(;idx<WHEEL.length-1;idx++){ r-=WHEEL[idx].w; if(r<0) break; }
+  let start=0; for(let i=0;i<idx;i++) start+=WHEEL[i].w/WTOT*TAU; const span=WHEEL[idx].w/WTOT*TAU;
+  const at=start+span*(.15+.7*Math.random()); // where in the slice the pointer stops
+  const from=WH.ang, base=((-at)%TAU+TAU)%TAU, cur=((from%TAU)+TAU)%TAU; const to=from+(base-cur+TAU)%TAU+TAU*5;
+  spins.push(Date.now()); store.set('bb_spins',spins); // the spin counts even if the page closes mid-spin
+  const prize=awardSlice(WHEEL[idx]);
+  WH.spinning=true; $('#spinGo').disabled=true; $('#wheelClose').disabled=true; $('#wheelRes').textContent='';
+  const t0=performance.now(), dur=4200; let lastTick=Math.floor(from/(TAU/24));
+  const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3); WH.ang=from+(to-from)*e; drawWheel();
+    const tick=Math.floor(WH.ang/(TAU/24)); if(tick!==lastTick){ lastTick=tick; tone(900,.03,'triangle',.03); }
+    if(k<1) requestAnimationFrame(step); else { WH.spinning=false; $('#wheelClose').disabled=false; $('#wheelRes').textContent=prize; SFX.win(); renderSpin(); renderMenu(); } };
+  requestAnimationFrame(step);
+};
+setInterval(()=>{ if(G.state==='menu') renderSpin(); },30000);
+renderSpin();
+
 function openPriv(){ $('#privBox').hidden=false; setTimeout(()=>$('#privOk').focus(),30); }
 $('#privBtn').onclick=openPriv; $('#privOk').onclick=()=>{ $('#privBox').hidden=true; };
 $('#privBox').addEventListener('click',e=>{ if(e.target.id==='privBox') $('#privBox').hidden=true; });
@@ -894,7 +1045,7 @@ function openHow(){ $('#howto').hidden=false; setTimeout(()=>$('#howOk').focus()
 function closeHow(){ $('#howto').hidden=true; store.set('bb_seenHow',1); }
 $('#howBtn').onclick=openHow; $('#howOk').onclick=()=>{ ac(); closeHow(); };
 $('#howto').addEventListener('click',e=>{ if(e.target.id==='howto') closeHow(); });
-window.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(!$('#privBox').hidden) $('#privBox').hidden=true; else if(!$('#buyBox').hidden) closeBuy(); else if(!$('#howto').hidden) closeHow(); else if(PV.try) endTry(); });
+window.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(!$('#privBox').hidden) $('#privBox').hidden=true; else if(!$('#codeBox').hidden) $('#codeBox').hidden=true; else if(!$('#resetBox').hidden) $('#resetBox').hidden=true; else if(!$('#wheelBox').hidden) closeWheel(); else if(!$('#buyBox').hidden) closeBuy(); else if(!$('#howto').hidden) closeHow(); else if(PV.try) endTry(); });
 if(!store.get('bb_seenHow',0)&&!CG) openHow();
 
 /* ---------- daily reward + quests ---------- */
@@ -1123,7 +1274,7 @@ function startRound(){
   const sp=spawnPoints(), d=DIFF[G.diff];
   G.balls=G.types.map((t,i)=>{
     const enemyBot=(G.mode==='bot'&&i===1)||(G.mode==='duo'&&i>=2)||(G.mode==='royale'&&i>0);
-    const hp=enemyBot?d.hp:100;
+    const hp=(enemyBot?d.hp:100)+(t===SECRET?25:0);
     if(G.mode==='boss'&&i===1){ const b=makeBall(t,1,1,G.boss.hp,sp[1][0],sp[1][1],{r:58,abil:G.boss.abil,cdMul:G.boss.cdMul,spdMul:.85,touchBonus:G.boss.touch,boss:true,bot:true}); b.hp=Math.max(1,G.bossHp); return b; }
     return makeBall(t,i,G.teams[i],hp,sp[i][0],sp[i][1],{bot:G.mode==='duo'&&i===1||enemyBot});
   });
@@ -1231,6 +1382,7 @@ function stormStrike(att,e){
 }
 function touch(att,tgt){
   let amt=att.dash>0?20:BALLS[att.type].touch+att.touchBonus;
+  if(att.type===SECRET&&!att.boss) amt=Math.ceil((tgt.max||100)/5); // pops any ball in 5 hits
   if(att.stack>0){ amt+=4*att.stack; text(att.x,att.y-att.r-8,'BOING x'+att.stack,'#ffd23f',18); att.stack=0; sfx('boing'); }
   if(att.puff>0) amt+=8;
   if(att.ambush>0){ amt+=10; att.ambush=0; text(att.x,att.y-att.r-8,'AMBUSH!','#8ff0ff',20); }
@@ -1492,7 +1644,7 @@ function showResult(myTeam){
     h.textContent=won?'VICTORY':'DEFEAT'; $('#resP').textContent=`${G.names[0]} vs ${G.names[1]} · ${vsTxt}`;
     if(mySide===1){ $('#again').hidden=true; $('#resWait').hidden=false; } }
   else { h.textContent=G.winner===0?'PLAYER 1 WINS':'PLAYER 2 WINS'; h.className=G.winner===0?'p1':'lose'; $('#resP').textContent=vsTxt; }
-  if(G.mode!=='pvp'){ earned=Math.max(5,Math.round(earned*econMult())); h.className=won?'win':'lose'; coins+=earned; if(won) stats.wins++; $('#earnN').textContent=`+${earned} coins`; $('#earn').hidden=false;
+  if(G.mode!=='pvp'){ earned=won?WIN_COINS:Math.max(5,Math.min(25,Math.round(earned*econMult()))); /* every win pays the same; losses pay a little */ h.className=won?'win':'lose'; coins+=earned; if(won) stats.wins++; $('#earnN').textContent=`+${earned} coins`; $('#earn').hidden=false;
     questEvent('play'); if(won){ questEvent('win'); if(BALLS[G.types[mySide]].price>0) questEvent('bought'); } questEvent('dmg',G.dealt[mySide]||0); }
   else questEvent('play');
   save(); lbSubmit();
