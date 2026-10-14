@@ -528,7 +528,9 @@ if(CG&&window.CrazyGames&&window.CrazyGames.SDK){
   try{ await window.CrazyGames.SDK.init(); if(['crazygames','local'].includes(window.CrazyGames.SDK.environment)) CGS=window.CrazyGames.SDK; }catch(e){ CGS=null; }
   if(CGS){ try{ CGS.game.loadingStart(); }catch(e){} try{ cgUser=await CGS.user.getUser(); }catch(e){} try{ cgMute=!!(CGS.game.settings&&CGS.game.settings.muteAudio); }catch(e){} }
 }
-const TAU=Math.PI*2, W=600, BASE=290;
+const TAU=Math.PI*2, W=510, BASE=290;
+const SC=W/600; // layouts below are written for a 600-wide arena and scaled to the real size
+const STEER=0.1; // how fast (radians per second) a ball gently curves toward its nearest enemy
 const rand=(a,b)=>a+Math.random()*(b-a);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const $=s=>document.querySelector(s);
@@ -568,7 +570,7 @@ const RARITY={rare:{label:'Rare',price:150,col:'#5fd3ff'},epic:{label:'Epic',pri
 const TIER_OF=k=>BALLS[k].secret?'celestial':BALLS[k].price<=0?null:BALLS[k].price>=650?'legend':BALLS[k].price>=450?'mythic':BALLS[k].price>=300?'epic':'rare';
 const KEYS=Object.keys(BALLS).filter(k=>!BALLS[k].secret); // the secret ball is never sold, won, or used by bots
 const SECRET='nova';
-const CD={blaze:.09,frost:2.3,hive:2.4,storm:99,ghost:5.5,bomb:2.5,cactus:2.8,slime:2.6,magnet:3.2,shield:4.2,laser:3,rocket:2.6,hole:4.6,mirror:2.8,boomer:1.9,clock:6,puffer:99,warp:3.3,rubber:99,ninja:2.9,wind:2.6,saw:99,tesla:.9};
+const CD={blaze:.09,frost:2.6,hive:1.8,storm:99,ghost:5.5,bomb:2.1,cactus:2.4,slime:2.6,magnet:3.2,shield:3.8,laser:2.4,rocket:2.6,hole:4.0,mirror:2.4,boomer:1.7,clock:6,puffer:99,warp:2.6,rubber:99,ninja:2.9,wind:2.6,saw:99,tesla:.8};
 const BOTS=['Rex','Juno','Pickle','Turbo','Nova','Waffles','Biscuit','Zippy','Mochi','Blitz','Pebble','Comet'];
 const DIFF={easy:{hp:80,aim:1.2,mult:.6,label:'Easy'},normal:{hp:100,aim:.6,mult:1,label:'Normal'},hard:{hp:125,aim:.15,mult:1.6,label:'Hard'}};
 const BOMB_R=92, FIRE_LIFE=2.8, OT_START=45;
@@ -1138,7 +1140,7 @@ const botName=()=>pick(BOTS);
 function randBotCos(){ return Math.random()<.35?{trail:pick(Object.keys(TRAILS).slice(1)),aura:Math.random()<.4?pick(Object.keys(AURAS).slice(1)):'none'}:{trail:'none',aura:'none'}; }
 
 function makeBall(type,side,team,max,x,y,o={}){
-  const r=o.r||34, abil=o.abil||[type];
+  x*=SC; y*=SC; const r=o.r||34, abil=o.abil||[type];
   return {type,side,team,x,y,vx:0,vy:0,r,r0:r,hp:max,max,abil,cds:abil.map(()=>rand(.6,1.3)),cdMul:o.cdMul||1,spdMul:o.spdMul||1,touchBonus:o.touchBonus||0,boss:!!o.boss,bot:!!o.bot,
     frozen:0,ghost:0,flash:0,burnCd:0,rot:0,ang:0,shield:0,dash:0,pulse:0,splitCd:0,puff:0,puffCd:0,ambush:0,holeCd:0,hist:[],histT:0,held:0,boost:0,spikeCd:0,bumpCd:0,padCd:0,stack:0,blown:0,blownBy:-1,sawCd:0,sawA:Math.random()*6,stormCd:0,dead:false};
 }
@@ -1204,6 +1206,7 @@ function makeArena(kind){
   if(kind==='spikes'||kind==='mix') A.spikes=Math.random()<.5?[1,0,1,0]:[0,1,0,1];
   if(kind==='pads'){ const ps=[[300,300],[300,150],[300,450],[200,200],[400,400],[400,200],[200,400]].sort(()=>Math.random()-.5).slice(0,3); ps.forEach(([x,y])=>A.pads.push({x,y,r:40,a:rand(0,TAU)})); }
   if(kind==='shrink') A.shrink=true;
+  for(const o of A.bumpers.concat(A.pads)){ o.x*=SC; o.y*=SC; }
   return A;
 }
 function encArena(A){ if(!A) return 0; return [ARENA_KINDS.indexOf(A.kind),A.bumpers.flatMap(b=>[R0(b.x),R0(b.y)]),A.spikes.reduce((m,v,i)=>m|(v?1<<i:0),0),A.pads.flatMap(p=>[R0(p.x),R0(p.y),R0(p.a*100)]),A.shrink?1:0]; }
@@ -1287,7 +1290,7 @@ function startRound(){
   G.humans=G.mode==='pvp'?[0,1]:[0];
   G.aimer=0;
   G.aiLockAt=G.balls.map(()=>rand(1.2,4));
-  G.angles=G.balls.map(b=>{ const e=nearestFoe(b), base=e?Math.atan2(e.y-b.y,e.x-b.x):Math.atan2(300-b.y,300-b.x);
+  G.angles=G.balls.map(b=>{ const e=nearestFoe(b), base=e?Math.atan2(e.y-b.y,e.x-b.x):Math.atan2(W/2-b.y,W/2-b.x);
     return b.bot?base+rand(-1,1)*(b.boss?.5:d.aim):base+rand(-.6,.6); });
   $('#center').textContent=''; $('#center').className='';
   if(G.arena){ $('#center').textContent=ARENA_NAMES[G.arena.kind].toUpperCase(); centerTimer=1.6; }
@@ -1371,7 +1374,7 @@ function damage(t,amt,by,opt={}){
     if(opt.att&&!opt.reflected) damage(opt.att,6,t.side,{reflected:true}); return 0; }
   if(t.puff>0&&!t.min) amt=Math.ceil(amt*.5);
   t.hp-=amt; t.flash=.12; if(by>=0&&G.dealt[by]!=null) G.dealt[by]+=amt;
-  if(!t.min&&has(t,'puffer')&&t.puffCd<=0&&amt>=3&&t.hp>0){ t.puff=2.4; t.puffCd=3.6; t.r=t.r0*1.4; text(t.x,t.y-t.r-8,'PUFF!','#ffd1e3',20); sfx('puff'); }
+  if(!t.min&&has(t,'puffer')&&t.puffCd<=0&&amt>=3&&t.hp>0){ t.puff=2.0; t.puffCd=4.4; t.r=t.r0*1.4; text(t.x,t.y-t.r-8,'PUFF!','#ffd1e3',20); sfx('puff'); }
   text(t.x+rand(-12,12),t.y-t.r-6,'-'+amt,'#ff4d5e',t.min?16:24);
   if(opt.att&&!opt.att.min&&has(opt.att,'ghost')&&!G.ot){ const a=opt.att, h=Math.min(5,a.max-a.hp); if(h>0){ a.hp+=h; text(a.x,a.y-a.r-6,'+'+h,'#5dff8f',20); } }
   if(!t.min&&has(t,'slime')&&t.splitCd<=0&&t.hp>0){ t.splitCd=.35; spawnMin(t,'slime'); }
@@ -1385,6 +1388,7 @@ function stormStrike(att,e){
   sfx('zap'); G.shake=Math.max(G.shake,5);
 }
 function touch(att,tgt){
+  G.hits=(G.hits||0)+1;
   let amt=att.dash>0?20:BALLS[att.type].touch+att.touchBonus;
   if(att.type===SECRET&&!att.boss) amt=Math.ceil((tgt.max||100)/5); // pops any ball in 5 hits
   if(att.stack>0){ amt+=4*att.stack; text(att.x,att.y-att.r-8,'BOING x'+att.stack,'#ffd23f',18); att.stack=0; sfx('boing'); }
@@ -1473,7 +1477,7 @@ function usePower(b,type,e){
 function step(dt){
   G.roundT+=dt;
   for(const k in G.pairCd) G.pairCd[k]-=dt;
-  if(G.arena&&G.arena.shrink) G.inset=Math.min(150,Math.max(0,(G.roundT-8)*4.5));
+  if(G.arena&&G.arena.shrink) G.inset=Math.min(150*SC,Math.max(0,(G.roundT-8)*4.5));
   if(G.arena) for(const p of G.arena.bumpers) p.hit=Math.max(0,p.hit-dt);
   const mult=Math.min(2.3,1+G.roundT*.02);
   const live=G.balls.filter(b=>!b.dead);
@@ -1491,6 +1495,8 @@ function step(dt){
   }
   for(const b of live){
     b.held=Math.max(0,(b.held||0)-dt);
+    { const e=nearestFoe(b); if(e&&STEER>0){ const cur=Math.atan2(b.vy,b.vx); let d=Math.atan2(e.y-b.y,e.x-b.x)-cur; d=Math.atan2(Math.sin(d),Math.cos(d));
+      const na=cur+Math.max(-STEER*dt,Math.min(STEER*dt,d)), m0=Math.hypot(b.vx,b.vy)||1; b.vx=Math.cos(na)*m0; b.vy=Math.sin(na)*m0; } }
     const sp=BASE*mult*b.spdMul*(b.frozen>0?.42:1)*(b.dash>0?2.3:1)*(b.held>0?.62:1)*(b.boost>0?1.45:1)*(1+.06*b.stack), m=Math.hypot(b.vx,b.vy)||1;
     b.vx=b.vx/m*sp; b.vy=b.vy/m*sp; b.x+=b.vx*dt; b.y+=b.vy*dt;
     if(wall(b,true)>=0){ sfx('wall'); if(has(b,'rubber')&&b.stack<5){ b.stack++; if(!G.silent&&b.stack>=3) burst(b.x,b.y,'#ffd23f',4,120,3,true); } }
@@ -1572,7 +1578,7 @@ function step(dt){
   // bombs fly to where the enemy is heading, then blow up
   for(const bm of G.bombs){ bm.t-=dt; const k=Math.min(1,dt*14); bm.x+=(clampA(bm.tx,14)-bm.x)*k; bm.y+=(clampA(bm.ty,14)-bm.y)*k; if(bm.t>0) continue; bm.dead=true;
     ring(bm.x,bm.y,10,BOMB_R,.35,'255,200,90'); burst(bm.x,bm.y,'#ffb02a',22,320,6); burst(bm.x,bm.y,'#5a5f78',10,180,8);
-    for(const e of foesOf(bm.team)) if(Math.hypot(e.x-bm.x,e.y-bm.y)<BOMB_R+e.r*.5) damage(e,10,bm.owner);
+    for(const e of foesOf(bm.team)) if(Math.hypot(e.x-bm.x,e.y-bm.y)<BOMB_R+e.r*.5) damage(e,12,bm.owner);
     for(const z of G.mins) if(z.team!==bm.team&&Math.hypot(z.x-bm.x,z.y-bm.y)<BOMB_R) damage(z,12,bm.owner);
     G.shake=Math.max(G.shake,10); sfx('boom');
   }
@@ -1811,7 +1817,7 @@ function resize(){
   const top=$('#hud').hidden?$('#roster').offsetHeight:$('#hud').offsetHeight;
   const used=top+$('#banner').offsetHeight+$('.ctrl').offsetHeight+$('#hint').offsetHeight+8*4+14;
   const availW=$('#game').clientWidth, availH=$('#app').clientHeight-20-used;
-  const s=Math.max(240,Math.min(availW,availH,660)), inner=s-20;
+  const s=Math.max(240,Math.min(availW,availH,660)), inner=Math.max(240,Math.round((s-20)*(.5+.5*SC)));
   cv.style.width=inner+'px'; cv.style.height=inner+'px';
   const dpr=Math.min(2,window.devicePixelRatio||1); cv.width=Math.round(inner*dpr); cv.height=Math.round(inner*dpr); scale=cv.width/W;
 }
@@ -2205,7 +2211,7 @@ function applySnap(g){
   if(G.state!=='pick'&&prevState==='pick'){ $('#pickBox').hidden=true; }
   G.round=num(g.r,1); G.aimT=num(g.at)/10; G.hearts=arr(g.h).slice(0,2).map(v=>num(v,3)); G.dealt=arr(g.dl).slice(0,2).map(v=>num(v));
   G.shake=Math.max(G.shake,num(g.sk)); flashSky=Math.max(flashSky,num(g.fl)/100);
-  G.inset=Math.min(150,Math.max(0,num(g.in)));
+  G.inset=Math.min(150*SC,Math.max(0,num(g.in)));
   if(Array.isArray(g.cs)) G.cos=[readCos(g.cs[0]),readCos(g.cs[1])];
   const lk=arr(g.lk);
   if(G.round!==prevRound){ G.myLocked=false; G.arena=g.ar?decArena(g.ar):null; $('#roundLbl').textContent='ROUND '+G.round; G.angles=[0,Math.PI+rand(-.6,.6)]; guestAimChanged(); $('#center').textContent=G.arena?ARENA_NAMES[G.arena.kind].toUpperCase():''; $('#center').className=''; centerTimer=G.arena?1.6:0; G.trail=[]; if(G.round>1) roundIntro(); }
@@ -2257,12 +2263,12 @@ function guestLock(){
 /* ---------- test hooks: fast silent matches for balance checks ---------- */
 function silentState(types,mode2){ return {silent:true,mode:mode2,types,teams:types.map((_,i)=>i),hearts:[1,1],crowns:[0,0,0,0],round:0,t:0,shake:0,dealt:types.map(()=>0),evlog:[],mins:[],shots:[],fires:[],bombs:[],lasers:[],holes:[],parts:[],texts:[],bolts:[],rings:[],pairCd:{},out:[],arena:null,inset:0}; }
 function runFight(maxT){ G.state='fight'; G.roundT=0; let n=0; while(G.state==='fight'&&n<maxT*180){ step(1/180); n++; } }
-window.__ballBrawlSim=(t0,t1,rounds=1,arenaKind)=>{ const keep=G; let w=[0,0], dealt=[0,0], time=0;
+window.__ballBrawlSim=(t0,t1,rounds=1,arenaKind)=>{ const keep=G; let w=[0,0], dealt=[0,0], time=0, hits=0;
   for(let r=0;r<rounds;r++){ G=silentState([t0,t1],'pvp'); G.arena=arenaKind?makeArena(arenaKind):null;
     G.balls=[makeBall(t0,0,0,100,150,300),makeBall(t1,1,1,100,450,300)];
     G.balls.forEach(b=>{ const a=rand(0,TAU); b.vx=Math.cos(a); b.vy=Math.sin(a); }); runFight(120);
-    if(G.state==='roundEnd') w[G.lastWin]++; dealt[0]+=G.dealt[0]; dealt[1]+=G.dealt[1]; time+=G.roundT; }
-  G=keep; return {wins:w,dealt,time}; };
+    if(G.state==='roundEnd') w[G.lastWin]++; dealt[0]+=G.dealt[0]; dealt[1]+=G.dealt[1]; time+=G.roundT; hits+=(G.hits||0); }
+  G=keep; return {wins:w,dealt,time,hits}; };
 window.__ballBrawlRoyaleSim=(types,rounds=1)=>{ const keep=G; const w=[0,0,0,0];
   for(let r=0;r<rounds;r++){ G=silentState(types,'royale'); const c=[[115,115],[485,115],[115,485],[485,485]];
     G.balls=types.map((t,i)=>makeBall(t,i,i,100,c[i][0],c[i][1])); G.balls.forEach(b=>{ const a=rand(0,TAU); b.vx=Math.cos(a); b.vy=Math.sin(a); }); runFight(150);
