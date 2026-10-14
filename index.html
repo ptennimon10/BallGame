@@ -1202,7 +1202,7 @@ const WIN_COINS=50; // coins for winning a match in any mode, any difficulty, an
 const econMult=()=>['ghost','bomb'].every(k=>owned.includes(k))?.7:1;
 function playLabel(){
   const d=DIFF[diff].label;
-  return {bot:`Play vs Bot (${d})`,duo:`Play 2v2 (${d})`,royale:`Play Royale (${d})`,boss:`Fight Boss · Level ${bossLevel}`,pvp:'Play 2 Players',online:''}[mode];
+  return {bot:`Play vs Bot (${d})`,duo:`Play 2v2 (${d})`,royale:`Play Royale (${d})`,hot:`Play Hot Bomb (${d})`,surv:`Play Survival · Best ${record.sv||0} waves`,boss:`Fight Boss · Level ${bossLevel}`,pvp:'Play 2 Players',online:''}[mode]||'Play';
 }
 function renderMenu(){
   renderGoals();
