@@ -161,6 +161,7 @@ input::placeholder{color:#55648f}
 .namebox .sub,.namebox .warn{text-align:center}
 #lbTabs button{font-size:.85rem;padding:.3em .7em}
 .credit{font-size:.8rem;color:var(--muted);font-weight:700;text-align:center;line-height:1.5}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--fg);text-decoration:underline;cursor:pointer}
 .credit b{font-family:var(--display);font-weight:400;color:var(--fg);font-size:1rem;letter-spacing:.02em}
 
 /* How-to modal */
@@ -419,6 +420,16 @@ input::placeholder{color:#55648f}
       <div class="buycost"><span class="coin"></span><span id="buyCost">0</span></div>
       <div class="sub" id="buyLeft"></div>
       <div class="row"><button class="btn btn-go" id="buyYes" type="button">Unlock</button><button class="btn btn-ghost" id="buyNo" type="button">Cancel</button></div>
+    </div>
+  </div>
+  <div class="modal" id="privBox" hidden role="dialog" aria-modal="true" aria-labelledby="privH">
+    <div class="mbox">
+      <h2 id="privH">Privacy &amp; Terms</h2>
+      <p class="note"><b>What the game stores.</b> Your coins, balls, cosmetics and settings are saved <span id="privSave">in this browser</span>. If you appear on the leaderboard, the game stores your player name, trophies, wins, total play time and a random player ID. Online matches share your player name and ball with your opponent while you play; match data is deleted when you leave.</p>
+      <p class="note" id="privStats"><b>Visitor stats.</b> The website counts page visits with Vercel Web Analytics, which does not use cookies or track you across sites.</p>
+      <p class="note"><b>What it doesn't do.</b> No sign-up, no email, no payments, no selling of data. There is no chat.</p>
+      <p class="note"><b>Terms.</b> Play fair and pick a respectful name. Offensive names are blocked and may be removed from the leaderboard. The game is provided as is, and features may change. Ricochet Royale &copy; <span id="privOwner">Parker Tennimon</span>. All rights reserved.</p>
+      <button class="btn btn-go" id="privOk" type="button">Got it</button>
     </div>
   </div>
   <div class="modal" id="howto" hidden role="dialog" aria-modal="true" aria-labelledby="howH">
@@ -869,14 +880,21 @@ $('#musicBtn').onclick=()=>{ musicOn=!musicOn; save(); setMute(); ac(); if(MUS.w
 setMute();
 (()=>{ const el=$('#credit'), l1=document.createElement('div'), b=document.createElement('b'), l2=document.createElement('div');
   l1.append('Created by ',b); b.textContent=GAME_INFO.developer;
-  l2.textContent=`© ${GAME_INFO.year} ${GAME_INFO.developer}. All rights reserved.`; el.append(l1,l2); })();
+  l2.textContent=`© ${GAME_INFO.year} ${GAME_INFO.developer}. All rights reserved.`;
+  const l3=document.createElement('div'), pb=document.createElement('button'); pb.type='button'; pb.id='privBtn'; pb.className='linkbtn'; pb.textContent='Privacy & Terms';
+  l3.append('By playing you agree to the ',pb,'.'); el.append(l1,l2,l3); })();
+$('#privOwner').textContent=GAME_INFO.developer;
+if(CG){ $('#privSave').textContent='to your CrazyGames account'; $('#privStats').hidden=true; }
+function openPriv(){ $('#privBox').hidden=false; setTimeout(()=>$('#privOk').focus(),30); }
+$('#privBtn').onclick=openPriv; $('#privOk').onclick=()=>{ $('#privBox').hidden=true; };
+$('#privBox').addEventListener('click',e=>{ if(e.target.id==='privBox') $('#privBox').hidden=true; });
 
 /* ---------- how to play ---------- */
 function openHow(){ $('#howto').hidden=false; setTimeout(()=>$('#howOk').focus(),30); }
 function closeHow(){ $('#howto').hidden=true; store.set('bb_seenHow',1); }
 $('#howBtn').onclick=openHow; $('#howOk').onclick=()=>{ ac(); closeHow(); };
 $('#howto').addEventListener('click',e=>{ if(e.target.id==='howto') closeHow(); });
-window.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(!$('#buyBox').hidden) closeBuy(); else if(!$('#howto').hidden) closeHow(); else if(PV.try) endTry(); });
+window.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(!$('#privBox').hidden) $('#privBox').hidden=true; else if(!$('#buyBox').hidden) closeBuy(); else if(!$('#howto').hidden) closeHow(); else if(PV.try) endTry(); });
 if(!store.get('bb_seenHow',0)&&!CG) openHow();
 
 /* ---------- daily reward + quests ---------- */
