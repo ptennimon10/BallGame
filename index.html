@@ -168,7 +168,7 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
 .whoon{display:flex;flex-wrap:wrap;gap:5px}
 .wo{font-size:.75rem;font-weight:800;background:var(--frame);border-radius:999px;padding:.2em .6em;border-left:4px solid var(--rc,#d08a4e)}
 .wo.me{color:var(--gold)}.wo.more{color:var(--muted);border-left-color:transparent}
-.faint{color:rgba(255,255,255,.06);font-size:.7rem;letter-spacing:.3em;text-align:right;margin:0;user-select:all}
+.faint{color:rgba(255,255,255,.17);font-size:.75rem;letter-spacing:.3em;text-align:right;margin:0;user-select:all;cursor:default;transition:color .3s,text-shadow .3s}.faint:hover,.faint:active{color:var(--gold);text-shadow:0 0 10px rgba(255,207,58,.8)}
 .threads{display:flex;flex-wrap:wrap;gap:6px}.thr{background:var(--frame);border:2px solid var(--line);color:var(--fg);border-radius:999px;padding:5px 12px;font:inherit;font-weight:800;font-size:.8rem;cursor:pointer;position:relative}
 .thr.on{border-color:var(--gold);color:var(--gold)}.thr i{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#ff4d5e}
 .chat .cmsg.me b{color:#7fe3ff}.grpcode{font-family:monospace;color:var(--gold);user-select:all}
@@ -309,6 +309,23 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
 .modes dd{margin:0;color:var(--muted);font-weight:700}
 
 /* Game */
+#intro{position:fixed;inset:0;z-index:30;background:radial-gradient(120% 90% at 50% 50%,rgba(30,40,90,.96),rgba(6,8,20,.98));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;box-sizing:border-box;overflow:auto}
+body.hw #intro{background:radial-gradient(120% 90% at 50% 50%,rgba(52,26,80,.96),rgba(10,6,20,.98))}
+.in-mode{font-family:var(--display);font-size:clamp(1.2rem,4vw,1.8rem);color:var(--gold);letter-spacing:.04em;text-align:center}
+.in-grid{display:flex;align-items:stretch;justify-content:center;gap:14px;flex-wrap:wrap;width:100%;max-width:980px}
+.in-side{display:flex;flex-direction:column;gap:10px}.in-vs{align-self:center;font-family:var(--display);font-size:clamp(2.4rem,9vw,4.4rem);color:#fff;text-shadow:0 4px 0 #b3001a,0 0 30px rgba(255,60,80,.6);animation:vsPop .6s cubic-bezier(.2,1.6,.4,1) both}
+.in-card{width:min(230px,42vw);background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:3px solid var(--tc,#7fe3ff);border-radius:18px;padding:10px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;box-shadow:0 0 24px color-mix(in srgb,var(--tc,#7fe3ff) 35%,transparent);animation:cardIn .5s ease-out both}
+.in-card.r{animation-name:cardInR}.in-card canvas{width:92px;height:92px}
+.in-card .nm{font-family:var(--display);font-size:1.3rem;line-height:1.05;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.in-card .ti{font-size:.72rem;font-weight:800;color:var(--muted);min-height:1em}
+.in-card .rk{font-weight:900;font-size:.85rem;color:var(--rc)}.in-card .st{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px}.in-card .st span{background:rgba(0,0,0,.3);border-radius:8px;padding:2px 7px;font-size:.72rem;font-weight:800}
+.in-card .you{font-size:.65rem;font-weight:900;background:var(--tc);color:#08101f;border-radius:6px;padding:1px 6px;letter-spacing:.06em}
+.in-count{font-family:var(--display);font-size:clamp(2.6rem,10vw,4rem);color:#fff;text-shadow:0 4px 0 #34467a;animation:cntPulse 1s ease-in-out infinite}
+@keyframes cardIn{from{transform:translateX(-60px);opacity:0}to{transform:none;opacity:1}}@keyframes cardInR{from{transform:translateX(60px);opacity:0}to{transform:none;opacity:1}}
+@keyframes vsPop{from{transform:scale(3);opacity:0}to{transform:none;opacity:1}}@keyframes cntPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.in-side.ffa{flex-direction:row;flex-wrap:wrap;justify-content:center;width:100%}.in-ffa{font-family:var(--display);color:#fff;font-size:1.1rem;opacity:.8;width:100%;text-align:center}
+@media (max-width:560px){#intro{justify-content:flex-start;padding-top:24px}.in-grid{flex-direction:column;align-items:center;gap:6px}.in-side{width:100%;max-width:380px;gap:6px}.in-side.ffa{flex-direction:column}
+.in-card{width:100%;box-sizing:border-box;display:grid;grid-template-columns:62px 1fr;column-gap:10px;row-gap:1px;text-align:left;align-items:center;padding:6px 10px}.in-card>*{grid-column:2}.in-card canvas{grid-column:1;grid-row:1/span 6;width:60px;height:60px}
+.in-card .st{justify-content:flex-start;margin-top:2px}.in-card .nm{font-size:1.05rem}.in-card .you{justify-self:start}.in-vs{font-size:2.2rem}}
 #game{width:100%;flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;padding-bottom:10px}
 #hud{width:100%;max-width:680px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
 .pl{display:flex;align-items:center;gap:8px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:6px 10px;position:relative;min-width:0}
@@ -510,7 +527,7 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
     <div class="panel" id="socMsgs" data-pg="social"><div class="panel-h"><h2>Messages</h2><span class="sub">Chat with a friend, or make a group</span></div>
       <div id="threadList" class="threads"></div>
       <div class="orow" style="margin-top:8px"><input type="text" id="grpName" maxlength="16" placeholder="New group name" aria-label="New group name" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-gold tiny" id="grpMake" type="button">Create group</button></div>
-      <div class="orow" style="margin-top:6px"><input type="text" id="grpCode" maxlength="8" placeholder="Group code" aria-label="Group code" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-ghost tiny" id="grpJoin" type="button">Join group</button></div>
+      <div class="orow" style="margin-top:6px"><input type="text" id="grpCode" maxlength="8" placeholder="Group code (5 letters)" aria-label="Group code" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-ghost tiny" id="grpJoin" type="button">Join group</button></div>
       <div class="chat" id="chatDm" hidden><div class="ch-h" id="dmHead">Messages</div><div class="clog"></div><div class="crow"><input type="text" maxlength="100" placeholder="Write a message" aria-label="Private message" autocomplete="off"><button class="btn btn-gold tiny" type="button">Send</button></div></div>
       <p class="note" id="socNote">Messages use the same safety filter as the main chat. Only add people you know.</p></div>
     <div class="panel" id="halloween" data-pg="shop" hidden><div class="panel-h"><h2>🎃 Halloween Event</h2><span class="sub">until November 1</span></div><p style="margin:0">Riddle: I'm round and orange. You carve a face in me, put a light inside, and I glow on Halloween night. Type my one-word name in the Code box to get the limited <b>Jack-o'-Ball</b>!</p></div>
@@ -581,6 +598,7 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
   </section>
 
   <section id="game" hidden>
+    <div id="intro" hidden><div class="in-mode" id="inMode"></div><div class="in-grid" id="inGrid"></div><div class="in-count" id="inCount">5</div></div>
     <div id="hud">
       <div class="pl you" id="pl0"><canvas width="84" height="84"></canvas><div class="pl-txt"><div class="pl-name">You</div><div class="pl-ball"></div><div class="hearts"></div></div><span class="ready" hidden>READY</span></div>
       <div class="vs">VS<small id="roundLbl">ROUND 1</small></div>
@@ -755,7 +773,7 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
       <p class="note">Every 5 seconds the walls close in a little, so stalling doesn't work. Deal damage to fill your MUTATION meter: when it's full your ball transforms for 6 seconds (Blaze becomes Inferno, Frost becomes Glacier and so on). Watch for combos: fire on poison goo makes a toxic flame, ice on a stuck or inked ball shatters it, and explosions clear goo, puddles and peels.</p>
       <p class="note">Open Profile to see your stats and pick a title. On the Social tab, add friends with their player ID: friends who add each other can message and invite each other, and you can make group chats with a code. Hosts can make their game public so anyone online can join. Ranked uses Elo: beating a higher-ranked player wins more trophies. Goals give coins, titles and exclusive trails and auras. Ranked seasons last 4 weeks: finish high for season rewards, then trophies are halved for the next season.</p>
       <p class="note">Spin the wheel twice every 24 hours for coins, trails or auras. The 1,500-coin Jackpot is 1 in 500. One Limited ball, Nova, can't be bought or won at all. It needs a secret code, and there are more secret codes hidden around the game for limited balls and rewards.</p>
-      <p class="faint" aria-hidden="true">r 3 t r 0</p>
+      <p class="faint" aria-hidden="true">🕹️ r 3 t r 0</p>
       <dl class="modes">
         <dt>vs Bot</dt><dd>One on one against a computer player.</dd>
         <dt>2v2</dt><dd>You and a bot teammate against two bots.</dd>
@@ -1969,15 +1987,46 @@ function newMatch(opt={}){
   else if(m==='boss'){ const B=bossSpec(bossLevel); types=[picks[0],B.type]; names=['You','Boss']; teams=[0,1]; cosList=[myCos(),{trail:'smoke',aura:'neon'}]; opt.boss=B; }
   else { types=opt.types; names=opt.names; teams=[0,1]; cosList=opt.cos||[myCos(),{trail:'none',aura:'none'}]; }
   G={state:'aim',mode:m,diff:opt.online?'normal':diff,types,names,teams,cos:cosList,hearts:[3,3],crowns:[0,0,0,0],round:0,t:0,shake:0,dealt:types.map(()=>0),mid:Math.random().toString(36).slice(2,8),evlog:[],evseq:0,
-     arenaPref:opt.arena||arenaPref,trail:[],boss:opt.boss||null,wave:1,online:!!opt.online,ranked:!!opt.ranked,humanSides:opt.humanSides||null,seatPeers:opt.seatPeers||null,seatUps:opt.seatUps||null,custs:opt.custs||null,trs:opt.trs||null,pids:opt.pids||null,me:0,bossLevel,bossHp:opt.boss?opt.boss.hp:0,bossDead:false};
-  showGame(); startRound(); musicPlay('match');
+     arenaPref:opt.arena||arenaPref,trail:[],boss:opt.boss||null,wave:1,online:!!opt.online,ranked:!!opt.ranked,humanSides:opt.humanSides||null,seatPeers:opt.seatPeers||null,seatUps:opt.seatUps||null,custs:opt.custs||null,trs:opt.trs||null,pids:opt.pids||null,cards:opt.cards||null,me:0,bossLevel,bossHp:opt.boss?opt.boss.hp:0,bossDead:false};
+  showGame(); startRound(); musicPlay('match'); startIntro();
 }
+// ---- match intro: every player's card, then a 5 second countdown ----
+const INTRO_TIME=5;
+function myCard(){ return {tr:trophies,ti:curTitle(),fb:favBall()||picks[0],w:stats.wins}; }
+function botCard(i){ const lv={easy:.55,normal:.9,hard:1.2}[G.diff]||.9, base=Math.max(0,Math.round((trophies||40)*lv+rand(-60,60)));
+  const tks=Object.keys(TITLES); return {tr:Math.max(0,base),ti:Math.random()<.5?pick(tks):'',fb:G.types[i],w:Math.round(rand(3,40)+base/12),bot:1}; }
+function buildCards(){ return G.types.map((t,i)=>{ if(G.mode==='boss'&&i===1) return {boss:1};
+  if(G.online&&i===0&&G.net!=='guest') return myCard(); if(G.online) return G.cards&&G.cards[i]||botCard(i);
+  if(isHumanSide(i)) return G.mode==='pvp'&&i===1?{tr:0,ti:'',fb:G.types[1],w:0,p2:1}:myCard(); return botCard(i); }); }
+function startIntro(){ if(G.net==='guest') return; if(!G.cards||!G.online) G.cards=buildCards(); else G.cards=G.cards.map((c,i)=>c||(G.seatPeers&&G.seatPeers[i]?{tr:G.trs&&G.trs[i]||0,ti:'',fb:G.types[i],w:0}:botCard(i))); G.introT=INTRO_TIME; G.state='intro'; showIntro(); }
+function readCard(v){ if(!Array.isArray(v)) return null; const num=x=>typeof x==='number'&&isFinite(x)?x:0; return {tr:Math.max(0,num(v[0])),ti:TITLES[v[1]]?v[1]:'',fb:BALLS[v[2]]?v[2]:'blaze',w:Math.max(0,num(v[3])),boss:v[4]===1?1:0}; }
+function encCards(){ return (G.cards||[]).map(c=>c?[R0(c.tr||0),c.ti||'',c.fb||'',R0(c.w||0),c.boss?1:0]:0); }
+function showIntro(){ const box=$('#inGrid'); box.innerHTML=''; const n=G.types.length, me=mySide();
+  const modeName={bot:'VS BOT',duo:'2 VS 2',royale:'ROYALE',hot:'HOT BOMB',surv:'SURVIVAL',boss:'BOSS FIGHT',pvp:'2 PLAYERS',online:'ONLINE 1V1'}[G.mode]||G.mode.toUpperCase();
+  const mapName=G.arenaPref==='chaos'?'Chaos':G.arena&&MAPS[G.arena.kind]?MAPS[G.arena.kind]:'Classic';
+  $('#inMode').textContent=(G.ranked?'🏆 RANKED · ':G.online?'🌐 ':'')+(G.online&&G.mode==='duo'?'ONLINE 2 VS 2':G.online&&isFFA()?'ONLINE '+modeName:modeName)+(mapName?' · '+mapName.toUpperCase():'');
+  const card=(i,right)=>{ const c=(G.cards&&G.cards[i])||{}, d=document.createElement('div'); d.className='in-card'+(right?' r':''); d.style.setProperty('--tc',TEAMC[G.mode==='duo'?G.teams[i]*2:i%4]); d.style.animationDelay=(i*.12)+'s';
+    const cv=document.createElement('canvas'); cv.width=184; cv.height=184; cv.dataset.side=i; d.append(cv);
+    if(i===me&&G.mode!=='pvp'){ const y=document.createElement('span'); y.className='you'; y.textContent='YOU'; d.append(y); }
+    const nm=document.createElement('div'); nm.className='nm'; nm.textContent=G.names[i]; d.append(nm);
+    const ti=document.createElement('div'); ti.className='ti'; ti.textContent=c.boss?'Level '+G.bossLevel+' Boss':TITLES[c.ti]?TITLES[c.ti].name:''; d.append(ti);
+    if(!c.boss&&!c.p2){ const r=rankOf(c.tr||0), rk=document.createElement('div'); rk.className='rk'; rk.style.setProperty('--rc',r.col); rk.textContent=`${r.name} · 🏆 ${c.tr||0}`; d.append(rk);
+      const st=document.createElement('div'); st.className='st'; const a=document.createElement('span'); a.textContent='⭐ Best: '+(BALLS[c.fb]?BALLS[c.fb].name.replace(' Ball',''):'—'); const w=document.createElement('span'); w.textContent='🥇 '+(c.w||0)+' wins'; st.append(a,w); d.append(st); }
+    const bl=document.createElement('div'); bl.className='ti'; bl.style.color='var(--fg)'; bl.textContent='Playing: '+BALLS[G.types[i]].name; d.append(bl); return d; };
+  if(n>2&&G.mode!=='duo'){ const col=document.createElement('div'); col.className='in-side ffa'; for(let i=0;i<n;i++) col.append(card(i,i%2===1)); const f=document.createElement('div'); f.className='in-ffa'; f.textContent='⚔️ EVERYONE FOR THEMSELVES ⚔️'; box.append(f,col); $('#intro').hidden=false; $('#inCount').textContent=Math.max(1,Math.ceil(G.introT||INTRO_TIME)); return; }
+  const sides=G.mode==='duo'?[[0,1],[2,3]]:[[0],[1]];
+  sides.forEach((grp,k)=>{ const col=document.createElement('div'); col.className='in-side'; for(const i of grp) col.append(card(i,k===1)); box.append(col); if(k===0){ const vs=document.createElement('div'); vs.className='in-vs'; vs.textContent='VS'; box.append(vs); } });
+  $('#intro').hidden=false; $('#inCount').textContent=Math.max(1,Math.ceil(G.introT||INTRO_TIME)); SFX.mp&&SFX.mp(); }
+function paintIntro(t){ if($('#intro').hidden) return; document.querySelectorAll('#inGrid canvas').forEach(cv=>{ const i=+cv.dataset.side, c=cv.getContext('2d'); c.clearRect(0,0,184,184); const co=G.cos&&G.cos[i]; if(co&&co.aura) drawAura(c,co.aura,92,92,52,t); drawBall(c,G.types[i],92,92,52,{t,rot:t,ang:t*.6,cust:G.custs&&G.custs[i]}); }); }
+function introTick(dt){ G.introT-=dt; const n=Math.max(1,Math.ceil(G.introT)); const el=$('#inCount'); if(el.textContent!==String(n)){ el.textContent=n; SFX.click&&SFX.click(); }
+  if(G.introT<=0) endIntro(); }
+function endIntro(){ $('#intro').hidden=true; if(G.net!=='guest'&&G.state==='intro'){ G.state='aim'; sfx('fight'); } }
 function showGame(){
   const four=G.types.length===4;
   $('#hud').hidden=isFFA(); $('#roster').hidden=!isFFA();
   if(isFFA()) buildRoster();
   panelText();
-  for(const m of ['#profBox','#upBox','#codeBox','#privBox','#buyBox','#resetBox','#pcBox','#newsBox']) $(m).hidden=true; if(!WH.spinning) $('#wheelBox').hidden=true; $('#menu').hidden=true; $('#game').hidden=false; $('#result').hidden=true; $('#wait').hidden=true; $('#pickBox').hidden=true;
+  for(const m of ['#profBox','#upBox','#codeBox','#privBox','#buyBox','#resetBox','#pcBox','#newsBox','#intro']) $(m).hidden=true; if(!WH.spinning) $('#wheelBox').hidden=true; $('#menu').hidden=true; $('#game').hidden=false; $('#result').hidden=true; $('#wait').hidden=true; $('#pickBox').hidden=true;
   $('#hint').textContent=controlHint();
   $('#quit').textContent=G.online?'Leave match':'Quit match'; syncChatUI();
   resize();
@@ -2752,6 +2801,7 @@ function showResult(myTeam,me){
 
 /* ---------- update (local and host) ---------- */
 function update(dt){
+  if(G.state==='intro'){ introTick(dt); tickFx(dt); return; }
   if(G.state==='aim'){
     G.aimT-=dt;
     const bn=$('#banner'), sec=Math.max(0,Math.ceil(G.aimT));
@@ -3391,7 +3441,7 @@ $('#start').onclick=()=>hostStartMatch();
 function netLobbyPresence(){
   lobbyPresence({});
   if(!NET.room||NET.inMatch) return;
-  const base={role:NET.role,nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],up:myUpArr(),jt:NET.jt,g:null,a:null,lk:null,pk:null,rd:null,pw:null,hy:null,cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid};
+  const base={role:NET.role,nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],up:myUpArr(),jt:NET.jt,g:null,a:null,lk:null,pk:null,rd:null,pw:null,hy:null,cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid,cd:[trophies,curTitle(),favBall()||picks[0],stats.wins]};
   if(NET.role==='host') Object.assign(base,{rm:NET.auto?'1v1':roomMode,rk:NET.ranked?1:0,seats:(NET.guests||[]).map(p=>p.peer)});
   NET.room.presence(base).catch(()=>{});
   renderNet();
@@ -3527,14 +3577,14 @@ function hostStartMatch(){
   if(NET.role!=='host'||!(NET.guests||[]).length) return;
   const rm=curRoomMode(), seated=NET.guests.slice(0,ROOM_MODES[rm].cap).filter(p=>p&&p.presence);
   if(!seated.length) return;
-  const humans=[{peer:null,nick:myNick(),ball:picks[0],cos:myCos(),up:NET.ranked?null:upOf(picks[0]),cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid}].concat(seated.map(p=>{ const q=p.presence; const bk=BALLS[q.ball]&&!(BALLS[q.ball].custom&&!readCust(q.cu))?q.ball:'blaze'; return {peer:p.peer,nick:cleanNick(q.nick)||'Player',ball:bk,cos:readCos(q.cos),up:NET.ranked?null:readUp(q.up),cu:bk==='custom'?readCust(q.cu):null,tr:Math.max(0,+q.tr||0),pid:okPid(q.pid)}; }));
+  const humans=[{peer:null,nick:myNick(),ball:picks[0],cos:myCos(),up:NET.ranked?null:upOf(picks[0]),cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid,card:myCard()}].concat(seated.map(p=>{ const q=p.presence; const bk=BALLS[q.ball]&&!(BALLS[q.ball].custom&&!readCust(q.cu))?q.ball:'blaze'; return {peer:p.peer,nick:cleanNick(q.nick)||'Player',ball:bk,cos:readCos(q.cos),up:NET.ranked?null:readUp(q.up),cu:bk==='custom'?readCust(q.cu):null,tr:Math.max(0,+q.tr||0),pid:okPid(q.pid),card:readCard(q.cd)}; }));
   NET.inMatch=true; if(MM.state!=='idle'){ MM.state='idle'; lobbyPresence({}); }
   const n=rm==='1v1'?2:4, teams=rm==='1v1'?[0,1]:rm==='2v2'?[0,0,1,1]:[0,1,2,3], m=rm==='1v1'?'online':rm==='2v2'?'duo':rm==='hot'?'hot':'royale';
-  const types=[],names=[],cosL=[],seatPeers=[],seatUps=[],custs=[],trs=[],pids=[],used=new Set();
+  const types=[],names=[],cosL=[],seatPeers=[],seatUps=[],custs=[],trs=[],pids=[],cards=[],used=new Set();
   for(let i=0;i<n;i++){ const h=humans[i];
-    if(h){ types.push(h.ball); names.push(h.nick); cosL.push(h.cos); seatPeers.push(h.peer); seatUps.push(h.up); custs.push(h.cu); trs.push(h.tr); pids.push(h.pid); }
-    else { let bn; do{ bn=botName(); }while(used.has(bn)); used.add(bn); types.push(pick(KEYS)); names.push('Bot '+bn); cosL.push(randBotCos()); seatPeers.push(undefined); seatUps.push(null); custs.push(null); trs.push(trophies); pids.push(0); } }
-  newMatch({mode:m,types,names,teams,cos:cosL,online:true,ranked:NET.ranked,humanSides:humans.slice(0,n).map((_,i)=>i),seatPeers,seatUps,custs,trs,pids});
+    if(h){ types.push(h.ball); names.push(h.nick); cosL.push(h.cos); seatPeers.push(h.peer); seatUps.push(h.up); custs.push(h.cu); trs.push(h.tr); pids.push(h.pid); cards.push(h.card); }
+    else { let bn; do{ bn=botName(); }while(used.has(bn)); used.add(bn); types.push(pick(KEYS)); names.push('Bot '+bn); cosL.push(randBotCos()); seatPeers.push(undefined); seatUps.push(null); custs.push(null); trs.push(trophies); pids.push(0); cards.push(null); } }
+  newMatch({mode:m,types,names,teams,cos:cosL,online:true,ranked:NET.ranked,humanSides:humans.slice(0,n).map((_,i)=>i),seatPeers,seatUps,custs,trs,pids,cards});
   G.net='host'; NET.mid=G.mid; NET.seen={};
 }
 function hostNetTick(){
@@ -3557,10 +3607,10 @@ function hostNetTick(){
   NET.room.presence({role:'host',nick:myNick(),ball:picks[0],g:snapshot()}).catch(()=>{});
 }
 function snapshot(){
-  const st={aim:0,fight:1,roundEnd:2,over:3,pick:4}[G.state]||0;
+  const st={aim:0,fight:1,roundEnd:2,over:3,pick:4,intro:5}[G.state]||0;
   const s={m:G.mid,md:G.mode,tm:G.teams.slice(),hs:(G.seatPeers||[]).map(x=>x||0),rk:G.ranked?1:0,s:st,r:G.round,at:R0(G.aimT*10),h:G.hearts.slice(),cr:G.crowns.slice(0,G.types.length),ty:G.types.slice(),nm:G.names.slice(),lk:G.locked?G.locked.map(v=>+v):[],
     w:G.winner==null?-1:G.winner,lw:G.lastWin==null?-1:G.lastWin,pt:G.state==='pick'?R0(G.pickT*10):0,pr:G.pickRound||0,ot:G.ot?1:0,dl:G.dealt.slice(),sk:R0(G.shake),fl:R0(flashSky*100),ar:encArena(G.arena),in:R0(G.inset||0),cs:G.cos.map(c=>[c.trail,c.aura]),
-    rd:G.redir?G.redir.map(v=>R0(v*10)):[], cu:G.custs||0, trs:G.trs||0, pz:G.pids||0, pi:G.balls?G.balls.map(b=>{ const p=powInfo(b); return [p.ch,p.max,R0(p.cd*100),R0(b.mut||0),b.abil&&b.abil.some(k=>ACTIVE.has(k))?1:0,b.hypOn?1:0,R0(b.hyp||0),b.hyperT>0?1:0]; }):[], ht:G.hot?[G.hot.holder,R0(G.hot.t*10)]:0,
+    rd:G.redir?G.redir.map(v=>R0(v*10)):[], cu:G.custs||0, trs:G.trs||0, pz:G.pids||0, cd:G.state==='intro'?encCards():0, it:G.state==='intro'?R0(G.introT*10):0, pi:G.balls?G.balls.map(b=>{ const p=powInfo(b); return [p.ch,p.max,R0(p.cd*100),R0(b.mut||0),b.abil&&b.abil.some(k=>ACTIVE.has(k))?1:0,b.hypOn?1:0,R0(b.hyp||0),b.hyperT>0?1:0]; }):[], ht:G.hot?[G.hot.holder,R0(G.hot.t*10)]:0,
     b:G.balls.map(b=>[R0(b.x),R0(b.y),R0(b.vx),R0(b.vy),R0(Math.max(0,b.hp)),(b.frozen>0?1:0)|(b.ghost>0?2:0)|(b.shield>0?4:0)|(b.dash>0?8:0)|(b.flash>0?16:0)|(b.dead?32:0)|(b.puff>0?64:0)|(b.ambush>0?128:0)|(b.boost>0?256:0)|(b.blown>0?512:0)|(b.poison>0?1024:0)|(b.glued>0?2048:0)|(b.frenzy>0?4096:0)|(b.spin>0?8192:0)|(b.inked>0?16384:0)|(b.bang>0?32768:0)|(b.ign>0?65536:0)|(b.mutT>0?131072:0)|(b.hyperT>0?262144:0)|(b.painted>0?524288:0)|(b.jump>0?1048576:0)|(b.shade>0?2097152:0)|(b.latchT>0?4194304:0)|(b.tstop>0?8388608:0)|(b.flare>0?16777216:0),R0(b.rot*10),R0(b.pulse*10),R0(b.r),b.stack||0,R0((b.sawA||0)*100),R0(b.max)]),
     n:G.mins.map(z=>[R0(z.x),R0(z.y),R0(z.vx),R0(z.vy),{bee:0,slime:1,clone:2,twin:3}[z.kind]||0,z.owner,z.flash>0?1:0,z.kind==='twin'?z.type:0,R0(z.r)]),
     p:G.shots.map(q=>[R0(q.x),R0(q.y),R0(q.vx),R0(q.vy),SHOT_KINDS.indexOf(q.kind)>0?SHOT_KINDS.indexOf(q.kind):0,q.owner|0,q.col|0]),
@@ -3602,7 +3652,9 @@ function applySnap(g){
   const num=(v,d=0)=>typeof v==='number'&&isFinite(v)?v:d;
   const arr=v=>Array.isArray(v)?v:[];
   const prevState=G.state, prevRound=G.round, n=G.types.length, me=G.me;
-  G.state=['aim','fight','roundEnd','over','pick'][num(g.s)]||'aim';
+  G.state=['aim','fight','roundEnd','over','pick','intro'][num(g.s)]||'aim';
+  if(G.state==='intro'){ if(Array.isArray(g.cd)) G.cards=g.cd.slice(0,n).map(readCard); G.introT=num(g.it)/10; if($('#intro').hidden) showIntro(); else $('#inCount').textContent=Math.max(1,Math.ceil(G.introT)); }
+  else if(!$('#intro').hidden) $('#intro').hidden=true;
   if(G.state!=='pick'&&Array.isArray(g.ty)&&g.ty.length===n&&g.ty.every(k=>BALLS[k])&&g.ty.some((k,i)=>k!==G.types[i])){ G.types=g.ty.slice(); panelText(); if(isFFA()) buildRoster(); }
   if(G.state==='pick'&&G.guestPickRound!==num(g.pr)){ // the host started a ball pick: show ours
     G.guestPickRound=num(g.pr); G.pickRound=num(g.pr); G.pickers=[me]; G.pickIdx=0; G.rerolled={}; G.picked=G.types.map((_,i)=>i!==me);
@@ -3671,7 +3723,7 @@ function playEv(ev){
   else if(t==='k'){ const k=num(ev[2]); G.kos=G.kos||{}; G.kos[k]=(G.kos[k]||0)+1; if(k===G.me){ prof.kos++; saveProf(); } }
   else if(t==='c'){ const k=str(ev[2]); if(k==='fight'||k==='round') showCenter(k,num(ev[3]),G.me!=null?G.me:1); }
 }
-function guestPresence(patch){ if(!NET.room) return; NET.room.presence(Object.assign({role:'guest',nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],up:myUpArr(),jt:NET.jt,cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid},patch)).catch(()=>{}); }
+function guestPresence(patch){ if(!NET.room) return; NET.room.presence(Object.assign({role:'guest',nick:myNick(),ball:picks[0],cos:[cos.trail,cos.aura],up:myUpArr(),jt:NET.jt,cu:picks[0]==='custom'?customSpec():null,tr:trophies,pid,cd:[trophies,curTitle(),favBall()||picks[0],stats.wins]},patch)).catch(()=>{}); }
 function guestAimChanged(){ if(G.net!=='guest'||!NET.room||G.me==null) return; guestPresence({a:R0(G.angles[G.me]*1000)}); }
 function guestSendPick(k){ guestPresence({pk:`${G.mid}:${G.pickRound}|${k}`}); }
 function guestLock(){
@@ -3702,7 +3754,7 @@ function renderChat(slot,msgs){
   const boxes=slot==='lobby'?[$('#chatLobby')]:slot==='dm'?[$('#chatDm')]:[$('#chatRoom'),$('#chatGame')];
   if(slot==='dm'&&SOC.cur&&page==='social') markSeen(SOC.cur);
   if(slot==='dm'&&/^grp-/.test(SOC.cur||'')){ const gr=prof.groups.find(g=>'grp-'+g.id===SOC.cur), last=msgs.slice().reverse().find(m=>typeof m.g==='string'&&cleanNick(m.g)&&!isBadText(m.g));
-    if(gr&&last&&/^Group [a-z0-9]{4}$/.test(gr.name)&&cleanNick(last.g)!==gr.name){ gr.name=cleanNick(last.g); saveProf(); setTimeout(renderThreads,0); } }
+    if(gr&&last&&/^Group [a-z0-9]{4,5}$/.test(gr.name)&&cleanNick(last.g)!==gr.name){ gr.name=cleanNick(last.g); saveProf(); setTimeout(renderThreads,0); } }
   for(const box of boxes){ if(!box) continue; const log=box.querySelector('.clog'); const atEnd=log.scrollTop+log.clientHeight>=log.scrollHeight-8; log.innerHTML='';
     const show=box.id==='chatGame'?msgs.slice(-5):msgs; const oldH=log.scrollHeight, oldTop=log.scrollTop;
     if(box.id!=='chatGame'&&CHAT.full[slot]&&msgs.length){ const more=document.createElement('div'); more.className='cempty'; more.textContent='↑ Scroll up for older messages'; log.append(more); }
@@ -3825,7 +3877,7 @@ setInterval(()=>{ inboxListen(); if(PC&&!$('#pcBox').hidden) renderPlayer(); },3
 
 /* ----- direct messages and group chats ----- */
 const SOC={cur:null,watch:{},unread:{},seen:store.get('bb_seen',{})};
-prof.groups=Array.isArray(prof.groups)?prof.groups.filter(g=>g&&/^[a-z0-9]{8}$/.test(g.id)).slice(0,20):[];
+prof.groups=Array.isArray(prof.groups)?prof.groups.filter(g=>g&&/^[a-z0-9]{5,8}$/.test(g.id)).slice(0,20):[];
 const dmChan=fid=>'dm-'+[pid,fid].sort().join('-');
 function threads(){ return prof.friends.concat(prof.dms).filter(f=>!isBlocked(f.pid)).map(f=>({ch:dmChan(f.pid),label:f.name||fmtId(f.pid),kind:'dm',pid:f.pid})).concat(prof.groups.map(g=>({ch:'grp-'+g.id,label:'👥 '+(g.name||g.id),kind:'grp',id:g.id}))); }
 function openThread(ch){ SOC.cur=ch; SOC.unread[ch]=false; markSeen(ch); chatOpen('dm',ch); renderThreads(); }
@@ -3845,9 +3897,9 @@ function socWatch(){ const want=new Set(chatAllowed()?threads().map(t=>t.ch):[])
   for(const ch of want){ if(SOC.watch[ch]) continue; try{ const ref=NET.db.ref('chat/'+ch).limitToLast(1), cb=snap=>{ const v=(snap&&snap.val())||{}; const m=Object.values(v)[0]; if(!m||m.p===pid) return; if((+m.ts||0)>(SOC.seen[ch]||0)){ if(SOC.cur===ch&&page==='social'){ markSeen(ch); } else { SOC.unread[ch]=true; renderThreads(); } } }; ref.on('value',cb); SOC.watch[ch]={ref,cb}; }catch(e){} } }
 function renderSocial(){ renderFriends(); renderThreads(); renderReqs(); socWatch(); inboxListen(); $('#myIdSub').textContent='Your ID: '+fmtId(pid); }
 $('#grpMake').onclick=()=>{ if(needName()) return; const nm=cleanNick($('#grpName').value)||'My group'; if(isBadText(nm)||isBadName(nm)){ toast("That name isn't allowed.",2.5); return; } if(prof.groups.length>=20){ toast('You are in too many groups.',2); return; }
-  const id=Array.from({length:8},()=>'abcdefghijkmnpqrstuvwxyz23456789'[Math.floor(Math.random()*32)]).join(''); prof.groups.push({id,name:nm}); saveProf(); $('#grpName').value=''; toast(`Group made! Share the code ${id} with friends.`,4); socWatch(); openThread('grp-'+id); };
-$('#grpJoin').onclick=()=>{ const id=String($('#grpCode').value||'').toLowerCase().replace(/[^a-z0-9]/g,''); if(!/^[a-z0-9]{8}$/.test(id)){ toast('A group code has 8 letters and numbers.',2.5); return; }
-  if(!prof.groups.some(g=>g.id===id)){ if(prof.groups.length>=20){ toast('You are in too many groups.',2); return; } prof.groups.push({id,name:'Group '+id.slice(0,4)}); saveProf(); } $('#grpCode').value=''; socWatch(); openThread('grp-'+id); };
+  const id=Array.from({length:5},()=>'abcdefghijkmnpqrstuvwxyz23456789'[Math.floor(Math.random()*32)]).join(''); prof.groups.push({id,name:nm}); saveProf(); $('#grpName').value=''; toast(`Group made! Share the code ${id} with friends.`,4); socWatch(); openThread('grp-'+id); };
+$('#grpJoin').onclick=()=>{ const id=String($('#grpCode').value||'').toLowerCase().replace(/[^a-z0-9]/g,''); if(!/^[a-z0-9]{5,8}$/.test(id)){ toast('A group code has 5 letters and numbers.',2.5); return; }
+  if(!prof.groups.some(g=>g.id===id)){ if(prof.groups.length>=20){ toast('You are in too many groups.',2); return; } prof.groups.push({id,name:'Group '+id.slice(0,5)}); saveProf(); } $('#grpCode').value=''; socWatch(); openThread('grp-'+id); };
 for(const id of ['grpName','grpCode']) $('#'+id).addEventListener('keydown',e=>e.stopPropagation());
 setInterval(()=>{ if(NET.db) socWatch(); },5000);
 
@@ -3880,9 +3932,10 @@ window.__ballBrawlBossSim=(level,tries=1)=>{ const keep=G; let wins=0;
   G=keep; return wins/tries; };
 
 /* test hook: end the current round instantly (used to check match point / sudden death) */
-window.__ballBrawlTest={ endRound(team){ if(G.net==='guest'||!(G.state==='fight'||G.state==='aim')) return false; G.state='fight'; if(!isFFA()&&G.mode!=='boss'){ for(const b of G.balls) if(b.team!==team) b.dead=true; } endRound(team); return true; },
+window.__ballBrawlTest={ endRound(team){ if(G.state==='intro'){ G.introT=0; endIntro(); } if(G.net==='guest'||!(G.state==='fight'||G.state==='aim')) return false; G.state='fight'; if(!isFFA()&&G.mode!=='boss'){ for(const b of G.balls) if(b.team!==team) b.dead=true; } endRound(team); return true; },
   info(){ return {state:G.state,mode:G.mode,hearts:G.hearts,crowns:G.crowns,round:G.round,music:MUS.track,me:G.me,redir:G.redir,teams:G.teams,types:G.types,names:G.names,humans:G.humanSides,ranked:!!G.ranked,ch:G.balls&&G.net!=='guest'?G.balls.map(b=>b.ch&&b.ch.join(',')):null,hp:G.balls?G.balls.map(b=>Math.round(b.hp)):null,max:G.balls?G.balls.map(b=>b.max):null}; },
-  launchNow(){ if(G.state==='aim'&&G.locked){ G.locked.fill(true); return true; } return false; },
+  skipIntro(){ if(G.state==='intro'){ G.introT=0; endIntro(); return true; } return false; },
+  launchNow(){ if(G.state==='intro'){ G.introT=0; endIntro(); } if(G.state==='aim'&&G.locked){ G.locked.fill(true); return true; } return false; },
   art:{drawBall,drawAura,spawnTrail,tickTrail,drawTrail,keys:KEYS} };
 
 /* ---------- loop ---------- */
@@ -3910,7 +3963,7 @@ function bgTick(){
     w.onmessage=bgTick; w.onerror=()=>{ if(!started) return; started=false; setInterval(bgTick,33); }; started=true; }catch(e){}
   if(!started) setInterval(bgTick,33);
 })();
-function frame(now){
+function frame(now){ if(!$('#intro').hidden) paintIntro(now/1000);
   frameAt=performance.now(); try{ NET.lobby&&NET.lobby.tick&&NET.lobby.tick(); }catch(e){}
   const gap=(now-last)/1000;
   if(gap>0.25&&G.state&&G.state!=='menu'&&G.net!=='guest'){ try{ catchUp(Math.min(60,gap-1/30)); }catch(e){ console.error(e); } }
