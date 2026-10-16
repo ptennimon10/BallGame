@@ -169,6 +169,34 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
 .wo{font-size:.75rem;font-weight:800;background:var(--frame);border-radius:999px;padding:.2em .6em;border-left:4px solid var(--rc,#d08a4e)}
 .wo.me{color:var(--gold)}.wo.more{color:var(--muted);border-left-color:transparent}
 .faint{color:rgba(255,255,255,.17);font-size:.75rem;letter-spacing:.3em;text-align:right;margin:0;user-select:all;cursor:default;transition:color .3s,text-shadow .3s}.faint:hover,.faint:active{color:var(--gold);text-shadow:0 0 10px rgba(255,207,58,.8)}
+.dmpanel{position:relative;padding:10px}
+.dmapp{display:grid;grid-template-columns:260px 1fr;height:min(560px,70vh);border-radius:14px;overflow:hidden;background:var(--frame);border:2px solid var(--line)}
+.dml{display:flex;flex-direction:column;gap:6px;padding:10px;border-right:2px solid var(--line);min-height:0}.dml-h{display:flex;align-items:center;justify-content:space-between;gap:8px}.dml-h h2{margin:0;font-size:1.25rem}
+#dmSearch{font:inherit;font-weight:700;padding:.4em .7em;border-radius:999px;border:2px solid var(--line);background:var(--panel);color:var(--fg)}
+.convs{display:flex;flex-direction:column;gap:2px;overflow-y:auto;min-height:0;flex:1}.convs.mini{max-height:200px;flex:none}
+.cv{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:8px;padding:7px 8px;border-radius:12px;background:none;border:0;color:var(--fg);font:inherit;text-align:left;cursor:pointer;width:100%}
+.cv:hover{background:rgba(255,255,255,.05)}.cv.on{background:rgba(127,227,255,.12)}
+.cv .av{position:relative;width:44px;height:44px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:1.3rem}.cv .av canvas{width:44px;height:44px}
+.cv .av .od{position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#3fd65a;border:2px solid var(--frame)}
+.cv .tx{min-width:0}.cv .nm{font-weight:800;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cv .pv{font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv .rt{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:.7rem;color:var(--muted);font-weight:800}.cv .ud{width:10px;height:10px;border-radius:50%;background:#ff4d5e}
+.cv.unread .nm,.cv.unread .pv{color:var(--fg);font-weight:900}
+.dmc{position:relative;display:flex;flex-direction:column;min-height:0;min-width:0}
+.dmh{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:2px solid var(--line);min-height:52px}.dmh canvas{width:38px;height:38px;flex:none}.dmh .who{flex:1;min-width:0}.dmh .who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dmh .who span{font-size:.75rem;color:var(--muted);font-weight:800}
+.dmh .back{display:none}
+.dmc .clog{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:2px;max-height:none!important;min-height:0}
+.bub{max-width:75%;padding:7px 11px;border-radius:18px;background:var(--panel);font-weight:700;font-size:.9rem;line-height:1.3;align-self:flex-start;overflow-wrap:anywhere}
+.bub.me{align-self:flex-end;background:linear-gradient(#3b8cff,#2a6ee0);color:#fff}.bub.first{margin-top:8px}.bub.me.cont{border-top-right-radius:6px}.bub:not(.me).cont{border-top-left-radius:6px}
+.bubn{font-size:.7rem;font-weight:900;color:var(--muted);margin:8px 0 0 10px}.bubt{font-size:.66rem;color:var(--muted);font-weight:800;margin:2px 8px 0}.bubt.me{align-self:flex-end}
+.daysep{align-self:center;font-size:.68rem;font-weight:900;color:var(--muted);background:rgba(255,255,255,.05);border-radius:999px;padding:2px 10px;margin:10px 0 4px}
+.seen{align-self:flex-end;font-size:.68rem;color:var(--muted);font-weight:800;margin:2px 6px 0}
+.dmin{display:flex;flex-wrap:nowrap;padding:8px;border-top:2px solid var(--line);gap:6px;align-items:center}.dmin input{flex:1;min-width:0;width:auto;font:inherit;font-weight:700;color:var(--fg);background:var(--panel);border:2px solid var(--line);border-radius:999px!important;padding:.55em .9em!important}.dmin .send{border-radius:999px;min-width:44px}
+.emob{background:none;border:0;font-size:1.3rem;cursor:pointer;padding:0 4px}.emo{display:flex;flex-wrap:wrap;gap:4px;padding:6px 10px;border-top:2px solid var(--line)}.emo button{background:none;border:0;font-size:1.35rem;cursor:pointer;padding:2px}
+.dmempty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;color:var(--muted);font-weight:800;padding:20px;background:var(--frame)}.dmempty b{color:var(--fg);font-size:1.1rem}
+.dmc.has .dmempty{display:none}.dmc:not(.has) .dmh,.dmc:not(.has) .dmin{visibility:hidden}
+.dmnew{position:absolute;inset:0;background:rgba(5,9,20,.7);display:grid;place-items:center;border-radius:18px;z-index:3;padding:10px}.dmnew-box{width:min(420px,100%);background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px;max-height:100%;overflow:auto}
+.dmnew-box input{font:inherit;font-weight:700;padding:.4em .7em;border-radius:10px;border:2px solid var(--line);background:var(--frame);color:var(--fg)}
+@media (max-width:640px){.dmapp{grid-template-columns:1fr;height:min(600px,74vh)}.dmapp .dmc{display:none}.dmapp.inchat .dml{display:none}.dmapp.inchat .dmc{display:flex}.dmh .back{display:inline-flex}.dml{border-right:0}}
 .threads{display:flex;flex-wrap:wrap;gap:6px}.thr{background:var(--frame);border:2px solid var(--line);color:var(--fg);border-radius:999px;padding:5px 12px;font:inherit;font-weight:800;font-size:.8rem;cursor:pointer;position:relative}
 .thr.on{border-color:var(--gold);color:var(--gold)}.thr i{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#ff4d5e}
 .chat .cmsg.me b{color:#7fe3ff}.grpcode{font-family:monospace;color:var(--gold);user-select:all}
@@ -177,6 +205,8 @@ body.hw .logo{color:#ff9a2a;text-shadow:0 4px 0 #9a3d00,0 10px 24px rgba(0,0,0,.
 #frBanner{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:60;background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:8px 12px;display:flex;gap:8px;align-items:center;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:calc(100vw - 32px)}
 .reqrow{display:flex;align-items:center;gap:8px;background:var(--frame);border-radius:10px;padding:6px 10px;margin-top:6px}.reqrow .fn{flex:1;min-width:0;font-weight:800}
 .setrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-weight:800;font-size:.85rem}.setrow select{font:inherit;font-weight:700;padding:.25em .5em;border-radius:8px;border:2px solid var(--line);background:var(--frame);color:var(--fg)}
+.modsteps{margin:0;padding-left:20px;text-align:left;font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}.modwords{display:flex;flex-wrap:wrap;gap:5px}
+.btn.modbtn{background:linear-gradient(#ff5a6e,#c81e3a)!important;color:#fff!important;box-shadow:0 4px 0 #7a0f20!important}
 .pubtog{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:.85rem;margin:6px 0}
 .opengames{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ogrow{display:flex;align-items:center;gap:8px;background:var(--frame);border-radius:10px;padding:6px 10px}.ogrow .fn{flex:1;min-width:0;font-weight:800}
 .riddle{background:var(--frame);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:.85rem}.riddle b{color:var(--gold)}
@@ -428,6 +458,7 @@ body.hw #intro{background:radial-gradient(120% 90% at 50% 50%,rgba(52,26,80,.96)
         <button class="pill mute" id="profBtn" type="button">Profile</button>
         <button class="pill mute" id="howBtn" type="button">How to play</button>
         <button class="pill mute" id="codeBtn" type="button">Code</button>
+        <button class="pill mute" id="modBtn" type="button" hidden>🛡 Admin</button>
         <button class="pill mute" id="autoBtn" type="button" title="Manual: you press POWER. Auto: powers fire on their own.">Powers: manual</button>
         <button class="pill mute" id="replayBtn" type="button" title="Slow-motion replay of every knock-out">KO replays: on</button>
         <button class="pill mute" id="musicBtn" type="button" aria-pressed="true">Music: on</button>
@@ -524,12 +555,32 @@ body.hw #intro{background:radial-gradient(120% 90% at 50% 50%,rgba(52,26,80,.96)
       <label class="setrow">Who can message me <select id="setDm"><option value="all">Everyone</option><option value="friends">Friends only</option></select></label>
       <label class="setrow">Friend requests <select id="setReq"><option value="on">On</option><option value="off">Off</option></select></label>
       <div id="blockBox"></div></div>
-    <div class="panel" id="socMsgs" data-pg="social"><div class="panel-h"><h2>Messages</h2><span class="sub">Chat with a friend, or make a group</span></div>
-      <div id="threadList" class="threads"></div>
-      <div class="orow" style="margin-top:8px"><input type="text" id="grpName" maxlength="16" placeholder="New group name" aria-label="New group name" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-gold tiny" id="grpMake" type="button">Create group</button></div>
-      <div class="orow" style="margin-top:6px"><input type="text" id="grpCode" maxlength="8" placeholder="Group code (5 letters)" aria-label="Group code" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-ghost tiny" id="grpJoin" type="button">Join group</button></div>
-      <div class="chat" id="chatDm" hidden><div class="ch-h" id="dmHead">Messages</div><div class="clog"></div><div class="crow"><input type="text" maxlength="100" placeholder="Write a message" aria-label="Private message" autocomplete="off"><button class="btn btn-gold tiny" type="button">Send</button></div></div>
-      <p class="note" id="socNote">Messages use the same safety filter as the main chat. Only add people you know.</p></div>
+    <div class="panel dmpanel" id="socMsgs" data-pg="social">
+      <div class="dmapp" id="dmApp">
+        <aside class="dml">
+          <div class="dml-h"><h2>Messages</h2><button class="btn btn-gold tiny" id="dmNewBtn" type="button">✏️ New</button></div>
+          <input type="search" id="dmSearch" placeholder="Search chats" aria-label="Search chats" autocomplete="off">
+          <div id="threadList" class="convs"></div>
+        </aside>
+        <section class="dmc" id="chatDm">
+          <div class="dmh" id="dmHead"></div>
+          <div class="clog"></div>
+          <div class="emo" id="dmEmo" hidden></div>
+          <div class="crow dmin"><button class="emob" id="dmEmoBtn" type="button" aria-label="Emoji">😀</button><input type="text" maxlength="100" placeholder="Message…" aria-label="Private message" autocomplete="off"><button class="btn btn-go tiny send" type="button" aria-label="Send">➤</button></div>
+          <div class="dmempty" id="dmEmpty"><div style="font-size:2.4rem">💬</div><b>Your messages</b><span>Pick a chat, or press ✏️ New to message a friend or make a group.</span></div>
+        </section>
+      </div>
+      <p class="note" id="socNote" style="margin:8px 0 0">Messages use the same safety filter as the main chat. Only add people you know.</p>
+      <div class="dmnew" id="dmNew" hidden><div class="dmnew-box">
+        <div class="dml-h"><h2>New message</h2><button class="btn btn-ghost tiny" id="dmNewX" type="button">✕</button></div>
+        <div class="or" style="text-align:left;margin:0">Friends</div><div id="dmNewFriends" class="convs mini"></div>
+        <div class="or" style="text-align:left;margin:6px 0 0">Find a player</div>
+        <div class="orow"><input type="text" id="dmFind" maxlength="16" placeholder="Their exact name" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-ghost tiny" id="dmFindGo" type="button">Find</button></div>
+        <div class="or" style="text-align:left;margin:6px 0 0">Group chat</div>
+        <div class="orow"><input type="text" id="grpName" maxlength="16" placeholder="New group name" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-gold tiny" id="grpMake" type="button">Create</button></div>
+        <div class="orow" style="margin-top:6px"><input type="text" id="grpCode" maxlength="8" placeholder="Group code (5 letters)" autocomplete="off" style="flex:1;min-width:0"><button class="btn btn-ghost tiny" id="grpJoin" type="button">Join</button></div>
+      </div></div>
+    </div>
     <div class="panel" id="halloween" data-pg="shop" hidden><div class="panel-h"><h2>🎃 Halloween Event</h2><span class="sub">until November 1</span></div><p style="margin:0">Riddle: I'm round and orange. You carve a face in me, put a light inside, and I glow on Halloween night. Type my one-word name in the Code box to get the limited <b>Jack-o'-Ball</b>!</p></div>
     <div class="panel" id="levelPanel" data-pg="balls"><div class="panel-h"><h2>Ball Levels</h2><span class="sub" id="lvlSub"></span></div><div id="lvlList" class="lvllist"></div></div>
     <div class="panel" id="fusePanel" data-pg="balls"><div class="panel-h"><h2>Fusion Lab</h2><span class="sub">Fuse two balls into a new one. You keep both.</span></div><div id="fuseList" class="fuselist"></div></div>
@@ -687,6 +738,9 @@ body.hw #intro{background:radial-gradient(120% 90% at 50% 50%,rgba(52,26,80,.96)
     </div>
   </div>
   <div id="frBanner" hidden><span id="frText"></span><button class="btn btn-go tiny" id="frYes" type="button">Accept</button><button class="btn btn-ghost tiny" id="frNo" type="button">Decline</button></div>
+  <div class="modal" id="modBox" hidden role="dialog" aria-modal="true" aria-labelledby="modH">
+    <div class="mbox"><h2 id="modH" style="margin:0">🛡 Admin tools</h2><div id="modBody" style="display:flex;flex-direction:column;gap:8px;width:100%"></div><div class="row"><button class="btn btn-ghost" id="modClose" type="button">Close</button></div></div>
+  </div>
   <div class="modal" id="upBox" hidden role="dialog" aria-modal="true" aria-labelledby="upH">
     <div class="mbox buybox">
       <canvas id="upIcon" width="160" height="160" aria-hidden="true"></canvas>
@@ -943,12 +997,14 @@ const MAPS={classic:'Classic',pillars:'Pillars',portals:'Portals',lava:'Lava',ti
 const MAP_TINT={pillars:'#16203a',portals:'#1a1636',lava:'#221418',tiny:'#141d33'};
 
 /* ---------- name filter (names other players can see) ---------- */
-const BAD_PART=['fuck','fuk','fck','shit','bitch','cunt','dick','cocksuck','pussy','asshole','bastard','slut','whore','faggot','nigg','niga','retard','rapist','porn','penis','vagina','boob','titt','jizz','nazi','hitler','killyourself','chink','kike','wetback','tranny','dyke','twat','wank','douche','molest','pedophil','dildo','horny','sexy','nude','naked','butthole','testicle','orgasm','stfu','gtfo','poop','peepee','weewee','weiner','wiener','booty','nutsack','tiddy','titty','bussy','gyat','skank','bimbo','incest','hentai','onlyfans','pornhub','xvideos','gooner','gooning','erect','boner','sperm','condom','thong','panties','bigpp','smallpp','tinypp','mypp','ppsize','dihh','deeznut','deeznuts','ligma','sugma','bofa','player','plyr','pl4yer','sawcon','imagay','urgay','ishgay','gaysex','lesbo','nigga','niger','negro','beaner','raghead','towelhead','sandnigg','zipperhead','gypsy','tarbaby','monkeyboy','porchmonk','honky','redskin','shemale','femboy','kms','killurself','kysnow','suicide','diddle','diddy','epstein','grapist','slave','wh0re','mommymilk','stepbro','stepsis','sexslave','cumslut','sl0t','f4g'];
-const BAD_WORD=['pp','pee','poo','poopy','dih','dik','dck','peen','butt','butts','fart','farts','nut','nuts','nutt','wee','balls','ballz','femboy','gooner','goon','edging','meth','weed','drunk','stoned','hoe','hoes','thicc','pooper','crap','damn','dammit','hell','piss','pissed','bum','bums','lick','licker','suck','sucker','sucks','moan','daddy','mommy','thot','wench','skank','bimbo','ass','arse','hoe','hoes','cum','sex','tit','tits','fag','fags','kys','kkk','nig','rape','raped','wtf','milf','thot','coon','gook','homo','anal','spic','spics','cock','cocks','pedo','semen','prick'];
+const BAD_PART=['nigha','nigah','niggah','nigguh','niqqa','nifga','nighak','nigak','ngakil','ngerkil','ngrkil','nigkil','fuck','fuk','fck','shit','bitch','cunt','dick','cocksuck','pussy','asshole','bastard','slut','whore','faggot','nigg','niga','retard','rapist','porn','penis','vagina','boob','titt','jizz','nazi','hitler','killyourself','chink','kike','wetback','tranny','dyke','twat','wank','douche','molest','pedophil','dildo','horny','sexy','nude','naked','butthole','testicle','orgasm','stfu','gtfo','poop','peepee','weewee','weiner','wiener','booty','nutsack','tiddy','titty','bussy','gyat','skank','bimbo','incest','hentai','onlyfans','pornhub','xvideos','gooner','gooning','erect','boner','sperm','condom','thong','panties','bigpp','smallpp','tinypp','mypp','ppsize','dihh','deeznut','deeznuts','ligma','sugma','bofa','player','plyr','pl4yer','sawcon','imagay','urgay','ishgay','gaysex','lesbo','nigga','niger','negro','beaner','raghead','towelhead','sandnigg','zipperhead','tarbaby','monkeyboy','porchmonk','honky','redskin','shemale','femboy','killurself','kysnow','diddle','grapist','wh0re','mommymilk','stepbro','stepsis','sexslave','cumslut','sl0t','f4g','fuq','phuck','fvck','sh1t','shyt','biatch','btch','beyotch','dickhead','dikhead','pen1s','ballsack','nutsak','areola','threesome','prostitut','sendnudes','blowjob','handjob','rimjob','footjob','jerkoff','jackoff','masturb','cumshot','creampie','deepthroat','bukkake','buttplug','nazis','swastika','kkk','whitepower','schoolshoot','suicid','selfharm','cutmyself','hangyourself','unalive','retarded','mongoloid','lardass','uglyass','asswipe','asshat','dipshit','bullshit','horseshit','shithead','shitter','crackhead','cokehead','drugdealer','drunkass','bitchass','motherf','sonofab','wtfuck','pornstar','camgirl','onlyfan','molester','pedobear','lolicon','rule34','dyk3','n1gg','n1g','nlgg','nigger','niggr','nibba','chinky','gook'];
+const BAD_WORD=['nga','ngas','nger','ngers','ngr','nig','niga','nigs','pp','pee','poo','poopy','dih','dik','dck','peen','butt','butts','fart','farts','nut','nuts','nutt','wee','balls','ballz','femboy','gooner','goon','edging','meth','weed','drunk','stoned','hoe','hoes','thicc','pooper','crap','damn','dammit','hell','piss','pissed','bum','bums','lick','licker','suck','sucker','sucks','moan','daddy','mommy','thot','wench','skank','bimbo','ass','arse','cum','sex','tit','tits','fag','fags','kys','kkk','nig','rape','raped','wtf','milf','coon','gook','homo','anal','spic','spics','cock','cocks','pedo','semen','prick','dilf','scrotum','kraut','isis','fentanyl','orgy','stoner','spaz','xanax','vaping','whitey','vibrator','pegging','titties','kms','bong','mofo','blunt','omfg','fap','dealer','sob','heroin','sixtynine','midget','spick','hump','pothead','pimp','strapon','slave','cracker','sexting','cooch','diddy','cripple','smartass','nigs','jihad','groomer','coochie','shota','nipple','epstein','bomber','rectum','humping','fetish','kock','suicide','fml','lynch','wop','hooker','redneck','mf','predator','shooter','jap','yiff','fatass','tiddies','killer','kinky','grope','badass','a55','azz','fatso','pubes','69er','escort','paki','r34','bdsm','jackass','heil','lmfao','vape','gypsy','clit','alcoholic','nudes','anus','gilf','bewbs','boobie','dumbass','pube','cocaine','dago','vag','stripper','terrorist','murder'];
 // whole-word and digit checks run on the raw text too: 69, 420 and leetspeak spellings
 const BAD_NUM=/(^|[^0-9])(69|420|80085|8008|5318008|1488)([^0-9]|$)/;
 function normName(s){ return String(s).toLowerCase().replace(/[0]/g,'o').replace(/[1!|]/g,'i').replace(/3/g,'e').replace(/[4@]/g,'a').replace(/[5$]/g,'s').replace(/7/g,'t').replace(/8/g,'b'); }
+let EXTRA_BAD=[]; // extra blocked words the admin adds from inside the game (saved online)
 function isBadName(s){
+  if(EXTRA_BAD.length){ const j=normName(s).replace(/[^a-z0-9]/g,''), q=j.replace(/(.)\1+/g,'$1'); if(EXTRA_BAD.some(w=>w&&(j.includes(w)||q.includes(w)))) return true; }
   if(BAD_NUM.test(String(s))) return true;
   if(/(^|[^a-z])p{2,}($|[^a-z])/i.test(String(s))||/p{2,}$/i.test(String(s).replace(/[^a-z]/gi,'').toLowerCase())&&!/(app|opp|upp|epp|ipp|hipp|happ)$/i.test(String(s).replace(/[^a-z]/gi,''))) return true;
   const n=normName(s), joined=n.replace(/[^a-z]/g,''), squeezed=joined.replace(/(.)\1+/g,'$1');
@@ -1630,7 +1686,7 @@ function renderFriends(){
   box.append(list);
   if(!(NET.role==='host'&&NET.code)){ const n=document.createElement('p'); n.className='note'; n.textContent='To invite friends, go to Online and press Create game first.'; box.append(n); }
 }
-function joinFriendRoom(code){ if(needName()) return; cgJoinFriend(code); }
+function joinFriendRoom(code){ if(amBanned()){ bannedToast(); return; } if(needName()) return; cgJoinFriend(code); }
 let invSent=null;
 function sendInvite(fid){ invSent={to:fid,code:NET.code,t:Date.now()}; lobbyPresence({}); toast('Invite sent!',1.6); setTimeout(()=>{ if(invSent&&Date.now()-invSent.t>=60000){ invSent=null; lobbyPresence({}); } },61000); }
 // invites addressed to me, only from people on my friends list
@@ -1748,7 +1804,7 @@ loadCustomForm(); applyCustom();
 
 /* ---------- secret code ---------- */
 // The code itself is not stored in the game, only a fingerprint of it, so it can't be read from the page source.
-const CODE_HASHES={'1vc2g7qz8rn':'nova','1e9a5grbvjn':'*all','qtwltezfxi':'jack','sk5yyi1d6a':'retro','28h2rabmn7j':'*explorer','1u69ddq98ba':'*riddle','1kp4gqn7j6g':'*inferno'};
+const CODE_HASHES={'1vc2g7qz8rn':'nova','1e9a5grbvjn':'*all','qtwltezfxi':'jack','sk5yyi1d6a':'retro','28h2rabmn7j':'*explorer','1u69ddq98ba':'*riddle','1kp4gqn7j6g':'*inferno','25wsl8p58tx':'*admin'};
 // one-time puzzle rewards: small, never game-breaking
 const CODE_GIFTS={'*explorer':{coins:250,badge:'Explorer',msg:'Explorer badge + 250 coins'},'*riddle':{coins:300,badge:'Riddle Master',msg:'Riddle Master badge + 300 coins'},'*inferno':{aura:'inferno',badge:'On Fire',msg:'Inferno aura + On Fire badge'}};
 function codeHash(str,seed=7){ let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed; for(let i=0;i<str.length;i++){ const ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
@@ -1761,6 +1817,7 @@ function redeemCode(){
     for(const b of Object.keys(BALLS)) if(!owned.includes(b)&&b!=='custom') owned.push(b);
     cos.trails=Object.keys(TRAILS); cos.auras=Object.keys(AURAS); coins+=10000; save(); SFX.win(); $('#codeBox').hidden=true;
     toast('Test code: everything unlocked + 10,000 coins',3.5); renderMenu(); return; }
+  if(k==='*admin'){ MOD.admin=true; store.set('bb_admin','1'); $('#modBtn').hidden=false; $('#codeBox').hidden=true; toast('Admin tools unlocked on this device.',3); openMod(); return; }
   if(CODE_GIFTS[k]){ const g=CODE_GIFTS[k]; prof.codes=prof.codes||[]; if(prof.codes.includes(k)){ $('#codeMsg').textContent='You already used that code.'; return; }
     prof.codes.push(k); if(g.coins) coins+=g.coins; if(g.badge&&!prof.badges.includes(g.badge)) prof.badges.push(g.badge); if(g.aura&&!cos.auras.includes(g.aura)) cos.auras.push(g.aura); saveProf(); save(); SFX.win(); $('#codeBox').hidden=true; toast('Secret found! '+g.msg,3.5); renderMenu(); return; }
   if(k==='jack'&&Date.now()>=HALLOWEEN_END&&!owned.includes(k)){ $('#codeMsg').textContent='That Halloween code has expired. See you next year!'; return; }
@@ -1777,6 +1834,8 @@ function streakHint(){ if((prof.streak||0)===5&&!(prof.codes||[]).includes('*inf
 
 /* ---------- reset progress ---------- */
 $('#resetBtn').onclick=()=>{ $('#resetBox').hidden=false; setTimeout(()=>$('#resetNo').focus(),30); };
+$('#modBtn').hidden=store.get('bb_admin','')!=='1'; $('#modBtn').onclick=()=>{ ac(); openMod(); }; $('#modClose').onclick=()=>{ $('#modBox').hidden=true; };
+$('#modBox').addEventListener('click',e=>{ if(e.target.id==='modBox') $('#modBox').hidden=true; });
 $('#resetBtn2').onclick=()=>{ $('#profBox').hidden=true; $('#resetBox').hidden=false; setTimeout(()=>$('#resetNo').focus(),30); };
 $('#resetNo').onclick=()=>{ $('#resetBox').hidden=true; };
 $('#resetBox').addEventListener('click',e=>{ if(e.target.id==='resetBox') $('#resetBox').hidden=true; });
@@ -3281,7 +3340,7 @@ function lbSubmit(){
 // old test entries: anything named Player, and Parker entries from before this update, are removed for good
 const LB_CUTOFF=1792011600000;
 function lbPurge(id,e){
-  const n=String(e&&e.nick||'').trim(), bad=!n||/player/i.test(n)||(/^parker$/i.test(n)&&(+e.t||0)<LB_CUTOFF)||!cleanNick(n);
+  const n=String(e&&e.nick||'').trim(), bb=banOf(id), bad=!n||/player/i.test(n)||(/^parker$/i.test(n)&&(+e.t||0)<LB_CUTOFF)||!cleanNick(n)||!!(bb&&(bb.t==='ban'||String(bb.n).toLowerCase()===n.toLowerCase()));
   if(bad&&id!==pid){ try{ NET.db.ref('leaders/'+id).remove().catch(()=>{}); }catch(err){} }
   return bad;
 }
@@ -3391,8 +3450,8 @@ async function netLeave(){
   if(r){ try{ await r.leave(); }catch(e){} }
   renderNet();
 }
-$('#create').onclick=()=>{ if(needName()) return; mmCancel(); const code=String(Math.floor(1000+Math.random()*9000)); netEnter('host',code); };
-$('#join').onclick=()=>{ if(needName()) return; const code=$('#codeIn').value; if(!/^\d{4}$/.test(code)){ toast('Type the 4-digit code from your friend.'); return; } mmCancel(); netEnter('guest',code); };
+$('#create').onclick=()=>{ if(amBanned()){ bannedToast(); return; } if(needName()) return; mmCancel(); const code=String(Math.floor(1000+Math.random()*9000)); netEnter('host',code); };
+$('#join').onclick=()=>{ if(amBanned()){ bannedToast(); return; } if(needName()) return; const code=$('#codeIn').value; if(!/^\d{4}$/.test(code)){ toast('Type the 4-digit code from your friend.'); return; } mmCancel(); netEnter('guest',code); };
 $('#leave').onclick=()=>netLeave();
 document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ if(NET.role!=='host'||NET.auto) return; roomMode=b.dataset.rm; store.set('bb_rmode',roomMode); netLobbyPresence(); renderNet(); });
 
@@ -3518,13 +3577,13 @@ function lobbyPresence(patch){
 }
 function selfId(peers){ if(NET.backend==='firebase') return NET.lobby.myId; const me=peers.find(p=>p.sameTab); return me?me.peer:null; }
 function mmStart(q){
-  if(NET.status!=='ready'||!NET.lobbyRoom) return;
+  if(NET.status!=='ready'||!NET.lobbyRoom) return; if(amBanned()){ bannedToast(); return; }
   ac(); MM.state='search'; MM.q=q==='r'?'r':'c'; MM.since=performance.now(); MM.offerTo=null;
   lobbyPresence({}); $('#mmText').textContent=MM.q==='r'?'Searching for a ranked opponent…':'Searching for an opponent…'; renderNet();
 }
 function mmCancel(){ if(MM.state==='idle') return; MM.state='idle'; lobbyPresence({}); renderNet(); }
-$('#findMatch').onclick=()=>{ if(needName()) return; mmStart('c'); };
-$('#findRanked').onclick=()=>{ if(needName()) return; mmStart('r'); };
+$('#findMatch').onclick=()=>{ if(amBanned()){ bannedToast(); return; } if(needName()) return; mmStart('c'); };
+$('#findRanked').onclick=()=>{ if(amBanned()){ bannedToast(); return; } if(needName()) return; mmStart('r'); };
 $('#mmCancel').onclick=mmCancel;
 function mmTick(){
   if(MM.state==='idle'||!NET.lobbyRoom) return;
@@ -3556,7 +3615,7 @@ function mmTick(){
 function lobbyCount(){
   if(!NET.lobbyRoom||mode!=='online') return;
   let peers=[]; try{ peers=NET.lobbyRoom.peers(); }catch(e){}
-  const names=peers.map(p=>({n:cleanNick(p.presence&&p.presence.nick),me:!!p.sameTab,tr:+(p.presence&&p.presence.tr)||0,ti:p.presence&&p.presence.ti,pid:okPid(p.presence&&p.presence.pid),ball:p.presence&&p.presence.ball})).filter(x=>x.n&&!(x.pid&&isBlocked(x.pid)));
+  const names=peers.map(p=>({n:cleanNick(p.presence&&p.presence.nick),me:!!p.sameTab,tr:+(p.presence&&p.presence.tr)||0,ti:p.presence&&p.presence.ti,pid:okPid(p.presence&&p.presence.pid),ball:p.presence&&p.presence.ball})).filter(x=>x.n&&!(x.pid&&(isBlocked(x.pid)||isBannedPid(x.pid))));
   const key=peers.length+'|'+names.map(x=>x.n+x.tr).join(',');
   if(key===MM.lastCount) return; MM.lastCount=key;
   $('#onlineN').textContent=Math.max(1,peers.length); $('#onlineCount').hidden=false;
@@ -3740,14 +3799,14 @@ function guestPower(){ if(G.net!=='guest'||G.state!=='fight') return false; if(!
 /* ----- chat: general (lobby) and room. Firebase only. Every message is filtered
    when it is sent and again when it is shown. ----- */
 const CHAT={on:store.get('bb_chat',true)!==false,ch:{},last:0};
-function chatAllowed(){ if(NET.backend!=='firebase'||!NET.db) return false; if(CGS){ try{ if(CGS.game.settings&&CGS.game.settings.disableChat) return false; }catch(e){} } return CHAT.on; }
+function chatAllowed(){ if(NET.backend!=='firebase'||!NET.db) return false; if(typeof MOD!=='undefined'&&amBanned()) return false; if(CGS){ try{ if(CGS.game.settings&&CGS.game.settings.disableChat) return false; }catch(e){} } return CHAT.on; }
 CHAT.lim={}; CHAT.full={}; CHAT.keep=null;
 function chatOpen(slot,name,force){
   const cur=CHAT.ch[slot]; if(cur&&cur.name===name&&!force) return; if(!force) CHAT.lim[slot]=50;
   if(cur){ try{ cur.ref.off('value',cur.cb); }catch(e){} } CHAT.ch[slot]=null; if(!force) renderChat(slot,[]);
   if(!name||!chatAllowed()) return;
   const lim=CHAT.lim[slot]||50;
-  try{ const ref=NET.db.ref('chat/'+name).limitToLast(lim), cb=snap=>{ const v=(snap&&snap.val())||{}; CHAT.full[slot]=Object.keys(v).length>=lim; const msgs=Object.keys(v).sort().map(k=>v[k]).filter(m=>m&&typeof m.t==='string'&&typeof m.n==='string'&&!isBadText(m.t)&&cleanNick(m.n)&&!(m.p&&isBlocked(m.p))); renderChat(slot,msgs); };
+  try{ const ref=NET.db.ref('chat/'+name).limitToLast(lim), cb=snap=>{ const v=(snap&&snap.val())||{}; CHAT.full[slot]=Object.keys(v).length>=lim; const msgs=Object.keys(v).sort().map(k=>v[k]).filter(m=>m&&typeof m.t==='string'&&typeof m.n==='string'&&!isBadText(m.t)&&cleanNick(m.n)&&!(m.p&&isBlocked(m.p))&&!msgHidden(m)); renderChat(slot,msgs); };
     ref.on('value',cb); CHAT.ch[slot]={name,ref,cb}; }catch(e){}
 }
 function renderChat(slot,msgs){
@@ -3758,7 +3817,9 @@ function renderChat(slot,msgs){
   for(const box of boxes){ if(!box) continue; const log=box.querySelector('.clog'); const atEnd=log.scrollTop+log.clientHeight>=log.scrollHeight-8; log.innerHTML='';
     const show=box.id==='chatGame'?msgs.slice(-5):msgs; const oldH=log.scrollHeight, oldTop=log.scrollTop;
     if(box.id!=='chatGame'&&CHAT.full[slot]&&msgs.length){ const more=document.createElement('div'); more.className='cempty'; more.textContent='↑ Scroll up for older messages'; log.append(more); }
+    if(!show.length&&box.id==='chatDm'){ const e=document.createElement('div'); e.className='cempty'; e.style.margin='auto'; e.textContent='No messages yet. Say hi! 👋'; log.append(e); } else
     if(!show.length){ const e=document.createElement('div'); e.className='cempty'; e.textContent=box.id==='chatLobby'?'Say hi to everyone online.':box.id==='chatDm'?'No messages yet. Say hi!':'Say hi to the other players.'; log.append(e); }
+    if(box.id==='chatDm'){ renderBubbles(log,show); } else
     for(const m of show){ const d=document.createElement('div'); d.className='cmsg'+(m.p&&m.p===pid?' me':''); const tm=document.createElement('time'); const dt=new Date(+m.ts||Date.now()); tm.textContent=dt.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+(Date.now()-dt>864e5?' · '+dt.toLocaleDateString([],{month:'short',day:'numeric'}):''); d.append(tm); const n=document.createElement('b'); n.textContent=cleanNick(m.n)+': '; if(okPid(m.p)&&m.p!==pid) clickName(n,m.p,{name:cleanNick(m.n)}); const t=document.createElement('span'); t.textContent=m.t; d.append(n,t); log.append(d); }
     if(CHAT.keep&&CHAT.keep.slot===slot&&box.id!=='chatGame') log.scrollTop=log.scrollHeight-CHAT.keep.h+oldTop;
     else if(atEnd||box.id==='chatGame') log.scrollTop=log.scrollHeight; }
@@ -3779,7 +3840,7 @@ function sendChat(slot,input){
   try{ NET.db.ref('chat/'+ch.name).push(Object.assign({n:myNick(),t:raw,ts:Date.now(),p:pid},/^grp-/.test(ch.name)?{g:((prof.groups.find(g=>'grp-'+g.id===ch.name)||{}).name||'').slice(0,16)}:{})).catch(()=>toast('Message not sent.',1.5)); }catch(e){}
 }
 for(const [id,slot] of [['chatLobby','lobby'],['chatRoom','room'],['chatDm','dm']]){ const lg=$('#'+id+' .clog'); if(lg) lg.addEventListener('scroll',()=>{ const ch=CHAT.ch[slot]; if(lg.scrollTop>6||!ch||!CHAT.full[slot]||CHAT.keep||(CHAT.lim[slot]||50)>=2000) return; CHAT.lim[slot]=(CHAT.lim[slot]||50)+50; CHAT.keep={slot,h:lg.scrollHeight}; chatOpen(slot,ch.name,true); }); }
-for(const [id,slot] of [['chatLobby','lobby'],['chatRoom','room'],['chatGame','room'],['chatDm','dm']]){ const box=$('#'+id); if(!box) continue; const inp=box.querySelector('input'), btn=box.querySelector('button');
+for(const [id,slot] of [['chatLobby','lobby'],['chatRoom','room'],['chatGame','room'],['chatDm','dm']]){ const box=$('#'+id); if(!box) continue; const inp=box.querySelector('.crow input'), btn=box.querySelector('.crow button.send')||box.querySelector('.crow button');
   btn.onclick=()=>sendChat(slot,inp); inp.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') sendChat(slot,inp); }); }
 $('#chatToggle').onclick=()=>{ CHAT.on=!CHAT.on; store.set('bb_chat',CHAT.on); if(!CHAT.on){ chatOpen('lobby',null); chatOpen('room',null); } else { chatOpen('lobby','lobby'); if(NET.roomName&&NET.role) chatOpen('room',NET.roomName); } syncChatUI(); };
 
@@ -3790,6 +3851,51 @@ function renderOpenGames(){ const box=$('#openGames'); if(!box) return; const G2
   for(const p of G2.slice(0,8)){ const q=p.presence, row=document.createElement('div'); row.className='ogrow'; const nm=document.createElement('div'); nm.className='fn'; nm.textContent=`${cleanNick(q.nick)||'Player'}'s game`; if(okPid(q.pid)) clickName(nm,q.pid,{name:cleanNick(q.nick),ball:q.ball}); const sb=document.createElement('span'); sb.className='sub'; const full=(+q.pub.n||1)>=(+q.pub.c||2); sb.textContent=`${ROOM_MODES[q.pub.m].label} · ${Math.min(+q.pub.n||1,+q.pub.c||2)}/${+q.pub.c||2}`;
     const j=document.createElement('button'); j.type='button'; j.className='btn btn-go tiny'; j.textContent=full?'Full':'Join'; j.disabled=full; j.onclick=()=>{ ac(); joinFriendRoom(String(q.rc)); }; row.append(nm,sb,j); box.append(row); } }
 setInterval(()=>{ if(page==='online') renderOpenGames(); },1500);
+
+/* ----- moderation: online bans, removed names, extra blocked words, and the admin tools ----- */
+var MOD={bans:{},sub:false,admin:store.get('bb_admin','')==='1',uid:'',authing:false};
+function banOf(id){ return id&&typeof MOD!=='undefined'&&MOD&&MOD.bans[id]||null; }
+function isBannedPid(id){ const b=banOf(id); return !!(b&&b.t==='ban'); }
+function msgHidden(m){ const b=m&&banOf(m.p); if(b&&(b.t==='ban'||(b.n&&cleanNick(m.n).toLowerCase()===String(b.n).toLowerCase()))) return true; return false; }
+function amBanned(){ return isBannedPid(pid); }
+function bannedToast(){ toast("You can't play online or chat because a moderator banned this player ID.",4); SFX.nope(); }
+function modSubscribe(){ if(MOD.sub||NET.backend!=='firebase'||!NET.db) return; MOD.sub=true;
+  try{ NET.db.ref('bans').on('value',snap=>{ const v=(snap&&snap.val())||{}; MOD.bans={}; for(const id of Object.keys(v)) if(okPid(id)&&v[id]&&typeof v[id]==='object') MOD.bans[id]={t:v[id].t==='ban'?'ban':'name',n:String(v[id].n||'').slice(0,16),ts:+v[id].ts||0}; applyMyBan(); refreshModViews(); },()=>{}); }catch(e){}
+  try{ NET.db.ref('badwords').on('value',snap=>{ const v=(snap&&snap.val())||{}; EXTRA_BAD=Object.keys(v).map(w=>normName(w).replace(/[^a-z0-9]/g,'')).filter(w=>w.length>=2).slice(0,500); MOD.words=Object.keys(v); if(!CG&&nick&&isBadName(nick)) clearMyName("Your name isn't allowed any more. Please pick a new one."); refreshModViews(); },()=>{}); }catch(e){} }
+function clearMyName(msg){ if(CG) return; nick=''; $('#nick').value=''; save(); checkNick&&checkNick(); try{ NET.db&&NET.db.ref('leaders/'+pid).remove().catch(()=>{}); }catch(e){} toast(msg,5); renderMenu(); }
+function applyMyBan(){ const b=banOf(pid); if(!b) return; if(b.n&&cleanNick(myNick()).toLowerCase()===b.n.toLowerCase()) clearMyName('A moderator removed your name. Please pick a new one.'); if(b.t==='ban'){ chatOpen('lobby',null); chatOpen('room',null); chatOpen('dm',null); syncChatUI(); } }
+function refreshModViews(){ if(page==='leaders') lbFetch(); MM.lastCount=''; for(const sl of ['lobby','room','dm']){ const ch=CHAT.ch[sl]; if(ch) chatOpen(sl,ch.name,true); } if(!$('#modBox').hidden) renderMod(); if(PC&&!$('#pcBox').hidden) renderPlayer(); }
+setInterval(()=>modSubscribe(),2000);
+// admin sign-in: only the admin's device signs in (anonymously), and only admin IDs listed in the database can moderate
+async function modAuth(){ if(MOD.uid||MOD.authing||NET.backend!=='firebase'||!window.firebase) return; MOD.authing=true;
+  try{ if(!firebase.auth) await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js'); const r=await firebase.auth().signInAnonymously(); MOD.uid=(r&&r.user&&r.user.uid)||(firebase.auth().currentUser||{}).uid||''; }
+  catch(e){ MOD.err=String(e&&e.code||e&&e.message||e); } MOD.authing=false; renderMod(); }
+function modWrite(path,val){ return NET.db.ref(path).set(val).then(()=>true).catch(()=>{ toast('Not allowed yet. Finish the admin setup in the 🛡 Admin panel.',4); return false; }); }
+function modBan(id,name,t){ if(!MOD.admin) return; modWrite('bans/'+id,{t,n:cleanNickRaw(name),ts:Date.now()}).then(ok=>{ if(!ok) return; try{ NET.db.ref('leaders/'+id).remove().catch(()=>{}); }catch(e){} toast(t==='ban'?`Banned ${name||'player'}.`:`Removed the name ${name||''}.`,2.5); modDeleteChat(id,name); }); }
+function cleanNickRaw(s){ return String(s||'').replace(/[^\p{L}\p{N} _.'-]/gu,'').slice(0,16).trim(); }
+function modUnban(id){ if(!MOD.admin) return; NET.db.ref('bans/'+id).remove().then(()=>toast('Unbanned.',2)).catch(()=>toast('Not allowed yet. Finish the admin setup.',3)); }
+function modDeleteChat(id,name){ if(!MOD.admin||!NET.db) return; const nl=String(name||'').toLowerCase(); let n=0;
+  for(const ch of ['lobby']){ try{ NET.db.ref('chat/'+ch).limitToLast(2000).once('value').then(snap=>{ const v=(snap&&snap.val())||{}; for(const k of Object.keys(v)){ const m=v[k]; if(m&&((id&&m.p===id)||(nl&&String(m.n||'').toLowerCase()===nl))){ n++; NET.db.ref('chat/'+ch+'/'+k).remove().catch(()=>{}); } } if(n) toast(`Deleted ${n} chat message${n===1?'':'s'}.`,2.5); }).catch(()=>{}); }catch(e){} } }
+function renderMod(){ const box=$('#modBody'); if(!box||$('#modBox').hidden) return; box.innerHTML=''; const add=(tag,txt,cls)=>{ const e=document.createElement(tag); if(txt!=null) e.textContent=txt; if(cls) e.className=cls; box.append(e); return e; };
+  if(NET.backend!=='firebase'||!NET.db){ add('p','The admin tools need the website version with online play connected.','note'); return; }
+  add('div','Setup (one time)','or').style.textAlign='left';
+  const st=add('p','','note'); st.style.textAlign='left';
+  st.textContent=MOD.uid?`Your admin ID: ${MOD.uid}`:MOD.authing?'Signing in…':MOD.err?`Sign-in failed (${MOD.err}). Turn on Anonymous sign-in in Firebase first (see steps).`:'Not signed in yet.';
+  if(MOD.uid){ const cp=add('button','Copy admin ID','btn btn-ghost tiny'); cp.type='button'; cp.onclick=()=>{ try{ navigator.clipboard.writeText(MOD.uid); toast('Copied!',1.5); }catch(e){} }; }
+  else { const si=add('button','Sign in as admin','btn btn-gold tiny'); si.type='button'; si.onclick=()=>modAuth(); }
+  const steps=add('ol','','modsteps'); for(const t of ['Firebase console → Authentication → Get started → Sign-in method → Anonymous → Enable → Save.','Come back here and press Sign in as admin, then Copy admin ID.','Firebase console → Realtime Database → Data → hover the top line → + → Key: admins → press + again inside it → Key: your admin ID, Value: true → Add.','Done. Remove, Ban and Unban buttons now work on any player card.']){ const li=document.createElement('li'); li.textContent=t; steps.append(li); }
+  add('div','Blocked words (names and chat)','or').style.textAlign='left';
+  const row=add('div','','orow'); const inp=document.createElement('input'); inp.type='text'; inp.maxLength=20; inp.placeholder='Add a word to block'; inp.style.cssText='flex:1;min-width:0'; inp.addEventListener('keydown',e=>e.stopPropagation()); const ab=document.createElement('button'); ab.type='button'; ab.className='btn btn-gold tiny'; ab.textContent='Block word';
+  ab.onclick=()=>{ const w=normName(inp.value).replace(/[^a-z0-9]/g,''); if(w.length<2){ toast('Type at least 2 letters.',2); return; } modWrite('badwords/'+w,true).then(ok=>{ if(ok){ inp.value=''; toast(`Blocked "${w}". Names with it are removed for everyone.`,3); } }); }; row.append(inp,ab);
+  const wl=add('div','','modwords'); for(const w of (MOD.words||[]).slice(0,200)){ const c=document.createElement('button'); c.type='button'; c.className='pill mute'; c.textContent=w+' ✕'; c.title='Unblock'; c.onclick=()=>NET.db.ref('badwords/'+w).remove().catch(()=>toast('Not allowed yet.',2)); wl.append(c); }
+  if(!(MOD.words||[]).length) add('p','No extra words yet. The built-in filter still blocks the usual bad words.','note');
+  add('div','Find a player by name','or').style.textAlign='left';
+  const r2=add('div','','orow'); const fi=document.createElement('input'); fi.type='text'; fi.maxLength=16; fi.placeholder='Exact name'; fi.style.cssText='flex:1;min-width:0'; fi.addEventListener('keydown',e=>e.stopPropagation()); const fb=document.createElement('button'); fb.type='button'; fb.className='btn btn-ghost tiny'; fb.textContent='Find';
+  fb.onclick=()=>{ const q=cleanNickRaw(fi.value).toLowerCase(); if(!q) return; NET.db.ref('leaders').orderByChild('nl').equalTo(q).limitToFirst(5).once('value').then(snap=>{ const v=(snap&&snap.val())||{}; const ids=Object.keys(v); if(!ids.length){ toast('No player with that exact name on the leaderboard.',2.5); return; } openPlayer(ids[0],{name:v[ids[0]].nick}); }).catch(()=>toast('Search failed.',2)); }; r2.append(fi,fb);
+  add('p','Tip: you can also tap any name in chat, the leaderboard or a game, then use the red 🛡 buttons on their card.','note');
+  add('div',`Bans and removed names (${Object.keys(MOD.bans).length})`,'or').style.textAlign='left';
+  for(const id of Object.keys(MOD.bans).slice(0,100)){ const b=MOD.bans[id], rw=document.createElement('div'); rw.className='reqrow'; const n=document.createElement('div'); n.className='fn'; n.textContent=`${b.t==='ban'?'⛔ Banned':'✏️ Name removed'} · ${b.n||'?'} · ${fmtId(id)}`; const u=document.createElement('button'); u.type='button'; u.className='btn btn-ghost tiny'; u.textContent='Undo'; u.onclick=()=>modUnban(id); rw.append(n,u); box.append(rw); } }
+function openMod(){ $('#modBox').hidden=false; renderMod(); if(!MOD.uid) modAuth(); }
 
 /* ----- player cards, friend requests, open messages, blocking ----- */
 function agoText(ts){ ts=+ts||0; if(!ts) return ''; const s2=Math.max(0,(Date.now()-ts)/1000); if(s2<90) return 'just now'; const m=Math.round(s2/60); if(m<60) return m+' min ago'; const h=Math.round(m/60); if(h<36) return h+(h===1?' hour ago':' hours ago'); const d=Math.round(h/24); return d+(d===1?' day ago':' days ago'); }
@@ -3809,7 +3915,7 @@ function clickName(el,id,hint){ if(!okPid(id)) return; el.classList.add('clk'); 
   el.onclick=ev=>{ ev.stopPropagation(); ac(); openPlayer(id,hint||{}); }; el.onkeydown=ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); openPlayer(id,hint||{}); } }; }
 let PC=null;
 function openPlayer(id,hint){ if(!okPid(id)) return; if(id===pid){ openProf(); return; }
-  const live=friendLive(id), lp=live&&live.presence||{};
+  const live=friendLive(id), lp=live&&live.presence||{}; if(banOf(id)&&!MOD.admin){ toast('This player was removed by a moderator.',2.5); return; }
   PC={id,name:cleanNick(hint.name)||cleanNick(lp.nick)||(prof.friends.find(f=>f.pid===id)||{}).name||'Player',ball:BALLS[hint.ball]?hint.ball:BALLS[lp.ball]?lp.ball:'blaze',tr:hint.tr!=null?hint.tr:+lp.tr||0,ti:hint.ti||lp.ti||'',rec:null,online:!!live};
   $('#pcBox').hidden=false; renderPlayer();
   if(NET.backend==='firebase'&&NET.db){ try{ NET.db.ref('leaders/'+id).once('value').then(snap=>{ const v=snap&&snap.val(); if(!PC||PC.id!==id||!v) return; PC.rec=v; if(cleanNick(v.nick)) PC.name=cleanNick(v.nick); if(BALLS[v.fb]) PC.ball=v.fb; PC.tr=+v.trophies||0; PC.ti=v.ti||PC.ti; renderPlayer(); }).catch(()=>{}); }catch(e){} } }
@@ -3829,6 +3935,10 @@ function renderPlayer(){ if(!PC||$('#pcBox').hidden) return; const v=PC.rec||{},
     else btn('Add friend','btn-gold',()=>{ sendReq(id,PC.name); renderPlayer(); });
     const dmOk=isFriend(id)||v.dm!=='f'; btn('💬 Message','btn-go',()=>{ $('#pcBox').hidden=true; openDm(id,PC.name); },!dmOk||!chatAllowed()); if(!dmOk) note=note||'This player only gets messages from friends.'; else if(!chatAllowed()) note=note||'Messages need online play and chat turned on.';
     if(NET.role==='host'&&NET.code&&!NET.auto&&friendLive(id)) btn('Invite to my game','btn-gold',()=>{ sendInvite(id); toast('Invite sent!',1.6); });
+    if(MOD.admin){ const b=banOf(id);
+      if(b) btn('🛡 Undo '+(b.t==='ban'?'ban':'name removal'),'modbtn',()=>modUnban(id));
+      else { btn('🛡 Remove name','modbtn',()=>modBan(id,PC.name,'name')); btn('🛡 Ban','modbtn',()=>modBan(id,PC.name,'ban')); }
+      btn('🛡 Delete their chat','modbtn',()=>modDeleteChat(id,PC.name)); }
     btn('Block','btn-ghost',()=>{ if(!prof.blocked.includes(id)) prof.blocked.push(id); prof.bn=prof.bn||{}; prof.bn[id]=PC.name; prof.friends=prof.friends.filter(f=>f.pid!==id); prof.dms=prof.dms.filter(d=>d.pid!==id); delete REQ.inc[id]; saveProf(); toast(`${PC.name} is blocked.`,2); renderPlayer(); renderSocialIfOpen(); }); }
   $('#pcNote').textContent=note; paintPlayerCard(performance.now()/1000); }
 $('#pcClose').onclick=()=>{ $('#pcBox').hidden=true; PC=null; };
@@ -3862,7 +3972,7 @@ function onInbox(v){ v=v||{}; let ch=false;
 function inboxListen(){ if(REQ.cb||NET.backend!=='firebase'||!NET.db) return;
   try{ const r1=NET.db.ref('social/'+pid+'/req'), r2=NET.db.ref('social/'+pid+'/dm'); REQ.cb=snap=>onReqs(snap&&snap.val()); REQ.dmcb=snap=>onInbox(snap&&snap.val()); r1.on('value',REQ.cb); r2.on('value',REQ.dmcb); }catch(e){} }
 function openDm(id,name){ if(isBlocked(id)) return; if(!isFriend(id)&&!prof.dms.some(d=>d.pid===id)){ prof.dms.push({pid:id,name:cleanNick(name)||''}); if(prof.dms.length>40) prof.dms.shift(); saveProf(); }
-  showPage('social'); socWatch(); openThread(dmChan(id)); setTimeout(()=>$('#chatDm').scrollIntoView({behavior:'smooth',block:'center'}),60); }
+  showPage('social'); socWatch(); openThread(dmChan(id)); setTimeout(()=>$('#socMsgs').scrollIntoView({behavior:'smooth',block:'start'}),60); }
 function renderReqs(){ const box=$('#reqBox'); if(!box) return; box.innerHTML=''; const ids=Object.keys(REQ.inc);
   for(const id of ids){ const row=document.createElement('div'); row.className='reqrow'; const n=document.createElement('div'); n.className='fn'; n.textContent=`${REQ.inc[id].n} wants to be friends`; clickName(n,id,{name:REQ.inc[id].n});
     const y=document.createElement('button'); y.type='button'; y.className='btn btn-go tiny'; y.textContent='Accept'; y.onclick=()=>acceptReq(id,REQ.inc[id].n);
@@ -3876,31 +3986,83 @@ $('#setReq').onchange=()=>{ prof.reqOn=$('#setReq').value!=='off'; saveProf(); l
 setInterval(()=>{ inboxListen(); if(PC&&!$('#pcBox').hidden) renderPlayer(); },3000);
 
 /* ----- direct messages and group chats ----- */
-const SOC={cur:null,watch:{},unread:{},seen:store.get('bb_seen',{})};
+const SOC={cur:null,watch:{},unread:{},seen:store.get('bb_seen',{}),last:{},rd:{}};
 prof.groups=Array.isArray(prof.groups)?prof.groups.filter(g=>g&&/^[a-z0-9]{5,8}$/.test(g.id)).slice(0,20):[];
 const dmChan=fid=>'dm-'+[pid,fid].sort().join('-');
 function threads(){ return prof.friends.concat(prof.dms).filter(f=>!isBlocked(f.pid)).map(f=>({ch:dmChan(f.pid),label:f.name||fmtId(f.pid),kind:'dm',pid:f.pid})).concat(prof.groups.map(g=>({ch:'grp-'+g.id,label:'👥 '+(g.name||g.id),kind:'grp',id:g.id}))); }
-function openThread(ch){ SOC.cur=ch; SOC.unread[ch]=false; markSeen(ch); chatOpen('dm',ch); renderThreads(); }
+function openThread(ch){ $('#dmNew').hidden=true; setTimeout(()=>{ const i=$('#chatDm .crow input'); if(i&&window.innerWidth>640) i.focus(); },50); SOC.cur=ch; SOC.unread[ch]=false; markSeen(ch); chatOpen('dm',ch); renderThreads(); }
 function markSeen(ch){ SOC.seen[ch]=Date.now(); store.set('bb_seen',SOC.seen); }
-function renderThreads(){ const box=$('#threadList'); if(!box) return; box.innerHTML=''; const T=threads();
-  if(!T.length){ const n=document.createElement('p'); n.className='note'; n.style.margin='0'; n.textContent='Add a friend or make a group to start chatting.'; box.append(n); }
-  for(const t of T){ const b=document.createElement('button'); b.type='button'; b.className='thr'+(SOC.cur===t.ch?' on':''); b.textContent=t.label; if(SOC.unread[t.ch]) b.append(document.createElement('i')); b.onclick=()=>{ ac(); openThread(t.ch); }; box.append(b); }
-  const cur=T.find(t=>t.ch===SOC.cur); $('#dmHead').textContent=''; if(cur){ $('#dmHead').append(cur.kind==='grp'?'Group: '+cur.label.slice(3)+' · code ':'Chat with '+cur.label); if(cur.kind==='grp'){ const c=document.createElement('span'); c.className='grpcode'; c.textContent=cur.id; const lv=document.createElement('button'); lv.type='button'; lv.className='btn btn-ghost tiny'; lv.style.marginLeft='8px'; lv.textContent='Leave'; lv.onclick=()=>{ prof.groups=prof.groups.filter(g=>g.id!==cur.id); saveProf(); SOC.cur=null; chatOpen('dm',null); socWatch(); renderThreads(); }; $('#dmHead').append(c,lv); } }
-  if(!threads().some(t=>t.ch===SOC.cur)){ SOC.cur=null; chatOpen('dm',null); }
-  $('#chatDm').hidden=!SOC.cur||!chatAllowed();
+const PROFC={}; // small cache of other players' public card info (best ball, last online)
+function peekProfile(id){ const c=PROFC[id]; if(c&&Date.now()-c.at<120000) return c; PROFC[id]={at:Date.now(),fb:c&&c.fb,ls:c&&c.ls};
+  if(NET.backend==='firebase'&&NET.db){ try{ NET.db.ref('leaders/'+id).once('value').then(snap=>{ const v=snap&&snap.val(); if(!v) return; PROFC[id]={at:Date.now(),fb:BALLS[v.fb]?v.fb:BALLS[v.ball]?v.ball:'',ls:+v.ls||0}; if(page==='social') renderThreads(); }).catch(()=>{}); }catch(e){} } return PROFC[id]; }
+function shortAgo(ts){ ts=+ts||0; if(!ts) return ''; const s2=(Date.now()-ts)/1000; if(s2<60) return 'now'; if(s2<3600) return Math.floor(s2/60)+'m'; if(s2<86400) return Math.floor(s2/3600)+'h'; if(s2<604800) return new Date(ts).toLocaleDateString([],{weekday:'short'}); return new Date(ts).toLocaleDateString([],{month:'short',day:'numeric'}); }
+function convBall(t){ if(t.kind!=='dm') return null; const live=friendLive(t.pid); if(live&&BALLS[live.presence.ball]) return live.presence.ball; const c=peekProfile(t.pid); return c&&BALLS[c.fb]?c.fb:'blaze'; }
+function avatarEl(t,size){ const av=document.createElement('div'); av.className='av'; if(t.kind==='grp'){ av.textContent='👥'; av.style.background='linear-gradient(135deg,#7b5cff,#ff6ad5)'; }
+  else { const cv=document.createElement('canvas'); cv.width=size*2; cv.height=size*2; av.append(cv); paintIcon(cv,convBall(t),1); if(friendLive(t.pid)){ const o=document.createElement('i'); o.className='od'; av.append(o); } } return av; }
+function renderThreads(){ const box=$('#threadList'); if(!box) return; box.innerHTML=''; const q=String(($('#dmSearch')||{}).value||'').toLowerCase();
+  const T=threads().map(t=>Object.assign(t,{last:SOC.last[t.ch]||null})).sort((x,y)=>((y.last&&y.last.ts)||0)-((x.last&&x.last.ts)||0)).filter(t=>!q||t.label.toLowerCase().includes(q));
+  if(!T.length){ const n=document.createElement('p'); n.className='note'; n.style.margin='8px 4px'; n.textContent=q?'No chats match.':'No chats yet. Press ✏️ New to message a friend or make a group.'; box.append(n); }
+  for(const t of T){ const b=document.createElement('button'); b.type='button'; b.className='cv'+(SOC.cur===t.ch?' on':'')+(SOC.unread[t.ch]?' unread':''); b.append(avatarEl(t,44));
+    const tx=document.createElement('div'); tx.className='tx'; const nm=document.createElement('div'); nm.className='nm'; nm.textContent=t.kind==='grp'?t.label.slice(3):t.label; const pv=document.createElement('div'); pv.className='pv';
+    const L=t.last; pv.textContent=L?((L.p===pid?'You: ':t.kind==='grp'?cleanNick(L.n)+': ':'')+L.t):t.kind==='grp'?'Group chat':friendLive(t.pid)?'Online now':'Say hi 👋'; tx.append(nm,pv);
+    const rt=document.createElement('div'); rt.className='rt'; rt.append(L?shortAgo(L.ts):''); if(SOC.unread[t.ch]){ const u=document.createElement('i'); u.className='ud'; rt.append(u); }
+    b.append(tx,rt); b.onclick=()=>{ ac(); openThread(t.ch); }; box.append(b); }
+  if(!threads().some(t=>t.ch===SOC.cur)&&SOC.cur){ SOC.cur=null; chatOpen('dm',null); }
+  renderDmHead();
   $('#socNote').textContent=chatAllowed()?'Messages use the same safety filter as the main chat. Only add people you know.':'Messages need online play and chat turned on.';
-  const n=Object.keys(SOC.unread).filter(k=>SOC.unread[k]).length+Object.keys(REQ.inc).length; const bd=$('#socialBadge'); bd.hidden=!n; bd.textContent=n||'';
-  const cur2=T.find(t=>t.ch===SOC.cur); if(cur2&&cur2.kind==='dm'){ const nm=document.createElement('span'); $('#dmHead').textContent='Chat with '; nm.textContent=cur2.label; clickName(nm,cur2.pid,{name:cur2.label}); $('#dmHead').append(nm); if(!isFriend(cur2.pid)){ const x=document.createElement('button'); x.type='button'; x.className='btn btn-ghost tiny'; x.style.marginLeft='8px'; x.textContent='Close chat'; x.onclick=()=>{ prof.dms=prof.dms.filter(d=>d.pid!==cur2.pid); saveProf(); SOC.cur=null; chatOpen('dm',null); socWatch(); renderThreads(); }; $('#dmHead').append(x); } } }
+  const n=Object.keys(SOC.unread).filter(k=>SOC.unread[k]).length+Object.keys(REQ.inc).length; const bd=$('#socialBadge'); bd.hidden=!n; bd.textContent=n||''; }
+function renderDmHead(){ const h=$('#dmHead'), app=$('#dmApp'), c=$('#chatDm'); const cur=threads().find(t=>t.ch===SOC.cur); c.classList.toggle('has',!!cur&&chatAllowed()); app.classList.toggle('inchat',!!cur); h.innerHTML=''; if(!cur) return;
+  const back=document.createElement('button'); back.type='button'; back.className='btn btn-ghost tiny back'; back.textContent='←'; back.onclick=()=>{ SOC.cur=null; chatOpen('dm',null); renderThreads(); }; h.append(back);
+  if(cur.kind==='dm'){ const cv=document.createElement('canvas'); cv.width=76; cv.height=76; paintIcon(cv,convBall(cur),1); h.append(cv); }
+  else { const g=document.createElement('div'); g.textContent='👥'; g.style.cssText='font-size:1.5rem;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#7b5cff,#ff6ad5)'; h.append(g); }
+  const who=document.createElement('div'); who.className='who'; const b=document.createElement('b'); b.textContent=cur.kind==='grp'?cur.label.slice(3):cur.label; const sp=document.createElement('span'); who.append(b,sp);
+  if(cur.kind==='dm'){ clickName(b,cur.pid,{name:cur.label}); const live=friendLive(cur.pid), c2=peekProfile(cur.pid); sp.textContent=live?'🟢 Online now':c2&&c2.ls?'Last online '+agoText(c2.ls):(isFriend(cur.pid)?'Friend':'Not friends yet'); }
+  else { sp.textContent='Group · code '; const code=document.createElement('span'); code.className='grpcode'; code.textContent=cur.id; sp.append(code); }
+  h.append(who);
+  const act=(txt,fn,title)=>{ const x=document.createElement('button'); x.type='button'; x.className='btn btn-ghost tiny'; x.textContent=txt; if(title) x.title=title; x.onclick=fn; h.append(x); };
+  if(cur.kind==='dm') act('👤',()=>openPlayer(cur.pid,{name:cur.label}),'View profile');
+  if(cur.kind==='grp'){ act('📋',()=>{ try{ navigator.clipboard.writeText(cur.id); toast('Group code copied!',1.5); }catch(e){} },'Copy group code'); act('Leave',()=>{ prof.groups=prof.groups.filter(g=>g.id!==cur.id); saveProf(); SOC.cur=null; chatOpen('dm',null); socWatch(); renderThreads(); }); }
+  else if(!isFriend(cur.pid)) act('✕',()=>{ prof.dms=prof.dms.filter(d=>d.pid!==cur.pid); saveProf(); SOC.cur=null; chatOpen('dm',null); socWatch(); renderThreads(); },'Close chat'); }
+// message bubbles, grouped like a phone messaging app, with day separators and "Seen"
+function renderBubbles(log,msgs){ let prev=null, lastDay='', lastMine=-1;
+  msgs.forEach((m,i)=>{ if(m.p===pid) lastMine=i; });
+  msgs.forEach((m,i)=>{ const mine=m.p===pid, ts=+m.ts||0, day=new Date(ts).toDateString();
+    if(day!==lastDay){ lastDay=day; const ds=document.createElement('div'); ds.className='daysep'; const td=new Date().toDateString(), yd=new Date(Date.now()-864e5).toDateString(); ds.textContent=day===td?'Today':day===yd?'Yesterday':new Date(ts).toLocaleDateString([],{weekday:'long',month:'short',day:'numeric'}); log.append(ds); prev=null; }
+    const cont=prev&&prev.p===m.p&&ts-(+prev.ts||0)<300000; const next=msgs[i+1], endGrp=!next||next.p!==m.p||(+next.ts||0)-ts>=300000||new Date(+next.ts||0).toDateString()!==day;
+    if(!mine&&!cont&&/^grp-/.test(SOC.cur||'')){ const n=document.createElement('div'); n.className='bubn'; n.textContent=cleanNick(m.n); if(okPid(m.p)) clickName(n,m.p,{name:cleanNick(m.n)}); log.append(n); }
+    const d=document.createElement('div'); d.className='bub'+(mine?' me':'')+(cont?' cont':' first'); d.textContent=m.t; d.title=new Date(ts).toLocaleString(); log.append(d);
+    if(endGrp){ const t=document.createElement('div'); t.className='bubt'+(mine?' me':''); t.textContent=new Date(ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); log.append(t); }
+    prev=m; });
+  const cur=threads().find(t=>t.ch===SOC.cur); if(cur&&cur.kind==='dm'&&lastMine>=0&&lastMine===msgs.length-1){ const r=SOC.rd[cur.pid]; if(r&&r>=(+msgs[lastMine].ts||0)){ const s2=document.createElement('div'); s2.className='seen'; s2.textContent='Seen '+shortAgo(r); log.append(s2); } }
+  if(cur&&cur.kind==='dm'&&msgs.length&&msgs[msgs.length-1].p!==pid) sendRead(cur.pid); }
+let readAt={};
+function sendRead(id){ if(!okPid(id)||page!=='social'||document.hidden) return; if(Date.now()-(readAt[id]||0)<4000) return; readAt[id]=Date.now(); try{ socRef(id,'rd',pid).set({n:myNick()||'Player',ts:Date.now()}).catch(()=>{}); }catch(e){} }
 // light listeners (last message only) so the Social tab can show unread dots
 function socWatch(){ const want=new Set(chatAllowed()?threads().map(t=>t.ch):[]);
   for(const ch of Object.keys(SOC.watch)) if(!want.has(ch)){ try{ SOC.watch[ch].ref.off('value',SOC.watch[ch].cb); }catch(e){} delete SOC.watch[ch]; }
-  for(const ch of want){ if(SOC.watch[ch]) continue; try{ const ref=NET.db.ref('chat/'+ch).limitToLast(1), cb=snap=>{ const v=(snap&&snap.val())||{}; const m=Object.values(v)[0]; if(!m||m.p===pid) return; if((+m.ts||0)>(SOC.seen[ch]||0)){ if(SOC.cur===ch&&page==='social'){ markSeen(ch); } else { SOC.unread[ch]=true; renderThreads(); } } }; ref.on('value',cb); SOC.watch[ch]={ref,cb}; }catch(e){} } }
+  for(const ch of want){ if(SOC.watch[ch]) continue; try{ const ref=NET.db.ref('chat/'+ch).limitToLast(1), cb=snap=>{ const v=(snap&&snap.val())||{}; const m=Object.values(v)[0]; if(!m||typeof m.t!=='string'||isBadText(m.t)||(m.p&&isBlocked(m.p))) return;
+      SOC.last[ch]={t:m.t,n:m.n,p:m.p,ts:+m.ts||0};
+      if(m.p!==pid&&(+m.ts||0)>(SOC.seen[ch]||0)){ if(SOC.cur===ch&&page==='social'){ markSeen(ch); } else SOC.unread[ch]=true; }
+      if(page==='social') renderThreads(); else { const n=Object.keys(SOC.unread).filter(k=>SOC.unread[k]).length+Object.keys(REQ.inc).length; const bd=$('#socialBadge'); bd.hidden=!n; bd.textContent=n||''; } }; ref.on('value',cb); SOC.watch[ch]={ref,cb}; }catch(e){} }
+  if(!SOC.rdSub&&NET.backend==='firebase'&&NET.db){ SOC.rdSub=true; try{ NET.db.ref('social/'+pid+'/rd').on('value',snap=>{ const v=(snap&&snap.val())||{}; SOC.rd={}; for(const id of Object.keys(v)) if(okPid(id)&&v[id]) SOC.rd[id]=+v[id].ts||0; const ch=CHAT.ch.dm; if(ch&&/^dm-/.test(ch.name)) chatOpen('dm',ch.name,true); }); }catch(e){} } }
 function renderSocial(){ renderFriends(); renderThreads(); renderReqs(); socWatch(); inboxListen(); $('#myIdSub').textContent='Your ID: '+fmtId(pid); }
 $('#grpMake').onclick=()=>{ if(needName()) return; const nm=cleanNick($('#grpName').value)||'My group'; if(isBadText(nm)||isBadName(nm)){ toast("That name isn't allowed.",2.5); return; } if(prof.groups.length>=20){ toast('You are in too many groups.',2); return; }
   const id=Array.from({length:5},()=>'abcdefghijkmnpqrstuvwxyz23456789'[Math.floor(Math.random()*32)]).join(''); prof.groups.push({id,name:nm}); saveProf(); $('#grpName').value=''; toast(`Group made! Share the code ${id} with friends.`,4); socWatch(); openThread('grp-'+id); };
 $('#grpJoin').onclick=()=>{ const id=String($('#grpCode').value||'').toLowerCase().replace(/[^a-z0-9]/g,''); if(!/^[a-z0-9]{5,8}$/.test(id)){ toast('A group code has 5 letters and numbers.',2.5); return; }
   if(!prof.groups.some(g=>g.id===id)){ if(prof.groups.length>=20){ toast('You are in too many groups.',2); return; } prof.groups.push({id,name:'Group '+id.slice(0,5)}); saveProf(); } $('#grpCode').value=''; socWatch(); openThread('grp-'+id); };
-for(const id of ['grpName','grpCode']) $('#'+id).addEventListener('keydown',e=>e.stopPropagation());
+for(const id of ['grpName','grpCode','dmFind','dmSearch']) $('#'+id).addEventListener('keydown',e=>e.stopPropagation());
+$('#dmSearch').addEventListener('input',()=>renderThreads());
+$('#dmNewBtn').onclick=()=>{ ac(); if(!chatAllowed()){ toast('Messages need online play and chat turned on.',2.5); return; } const box=$('#dmNewFriends'); box.innerHTML='';
+  const fr=prof.friends.filter(f=>!isBlocked(f.pid)); if(!fr.length){ const n=document.createElement('p'); n.className='note'; n.style.margin='0'; n.textContent='No friends yet. Tap anyone\'s name in chat or the leaderboard to add them.'; box.append(n); }
+  for(const f of fr){ const t={kind:'dm',pid:f.pid,label:f.name||fmtId(f.pid),ch:dmChan(f.pid)}; const b=document.createElement('button'); b.type='button'; b.className='cv'; b.append(avatarEl(t,44)); const tx=document.createElement('div'); tx.className='tx'; const nm=document.createElement('div'); nm.className='nm'; nm.textContent=t.label; const pv=document.createElement('div'); pv.className='pv'; pv.textContent=friendLive(f.pid)?'🟢 Online':'Friend'; tx.append(nm,pv); b.append(tx,document.createElement('span')); b.onclick=()=>openDm(f.pid,f.name); box.append(b); }
+  $('#dmNew').hidden=false; };
+$('#dmNewX').onclick=()=>{ $('#dmNew').hidden=true; };
+$('#dmNew').addEventListener('click',e=>{ if(e.target.id==='dmNew') $('#dmNew').hidden=true; });
+$('#dmFindGo').onclick=()=>{ const q=cleanNickRaw($('#dmFind').value).toLowerCase(); if(!q) return; if(!NET.db){ toast('Needs online play.',2); return; }
+  NET.db.ref('leaders').orderByChild('nl').equalTo(q).limitToFirst(5).once('value').then(snap=>{ const v=(snap&&snap.val())||{}; const id=Object.keys(v).find(k=>k!==pid&&!banOf(k)); if(!id){ toast('No player with that exact name.',2.5); return; } $('#dmNew').hidden=true; openPlayer(id,{name:v[id].nick}); }).catch(()=>toast('Search failed.',2)); };
+{ const E=['😀','😂','🤣','😎','😍','🥳','😮','😢','😡','👍','👎','👏','🙏','🔥','💯','🎉','❤️','💀','🎃','👻','⚽','🏆','⚡','🤝']; const box=$('#dmEmo');
+  for(const e of E){ const b=document.createElement('button'); b.type='button'; b.textContent=e; b.onclick=()=>{ const i=$('#chatDm .crow input'); i.value=(i.value+e).slice(0,100); i.focus(); }; box.append(b); }
+  $('#dmEmoBtn').onclick=()=>{ box.hidden=!box.hidden; }; }
 setInterval(()=>{ if(NET.db) socWatch(); },5000);
 
 /* ---------- test hooks: fast silent matches for balance checks ---------- */
